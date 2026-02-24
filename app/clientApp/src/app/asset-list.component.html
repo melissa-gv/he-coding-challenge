@@ -1,0 +1,44 @@
+<main class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <p class="eyebrow">Asset Management</p>
+      <h1>Asset List</h1>
+      <p class="subtitle">All available assets from the backend API.</p>
+    </div>
+    <button type="button" class="refresh-button" (click)="loadAssets()">Refresh</button>
+  </header>
+
+  @if (isLoading()) {
+    <section class="message-box">Loading assets...</section>
+  } @else if (errorMessage()) {
+    <section class="message-box error-box">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="retry-button" (click)="loadAssets()">Try again</button>
+    </section>
+  } @else {
+    <section class="table-wrapper" aria-label="Asset list">
+      <table class="asset-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Location</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (asset of assets(); track asset.id) {
+            <tr>
+              <td>{{ asset.name }}</td>
+              <td>{{ asset.type }}</td>
+              <td>{{ asset.location }}</td>
+              <td>
+                <span class="status-pill" [ngClass]="'status-' + asset.status">{{ asset.status }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+</main>

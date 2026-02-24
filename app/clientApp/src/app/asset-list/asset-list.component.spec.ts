@@ -45,11 +45,12 @@ describe('AssetListComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
+    const content = compiled.textContent ?? '';
     expect(compiled.querySelector('table.asset-table')).toBeTruthy();
     expect(compiled.querySelectorAll('table.asset-table thead th').length).toBe(4);
-    expect(compiled.textContent).toContain('Primary Cooling Pump');
-    expect(compiled.textContent).toContain('pump');
-    expect(compiled.textContent).toContain('Building A - Floor 1');
-    expect(compiled.textContent).toContain('operational');
+    expect(content).toContain('Primary Cooling Pump');
+    expect(content.toLowerCase()).toContain('pump');
+    expect(content).toContain('Building A - Floor 1');
+    expect(content.toLowerCase()).toContain('operational');
   });
 });

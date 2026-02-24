@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AssetListComponent } from './asset-list.component';
+import { AssetListComponent } from './asset-list/asset-list.component';
 
 @Component({
   selector: 'app-root',

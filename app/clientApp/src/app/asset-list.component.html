@@ -30,7 +30,7 @@
           @for (asset of assets(); track asset.id) {
             <tr>
               <td>{{ asset.name }}</td>
-              <td>{{ asset.type }}</td>
+              <td>{{ asset.type | titlecase }}</td>
               <td>{{ asset.location }}</td>
               <td>
                 <span class="status-pill" [ngClass]="'status-' + asset.status">{{ asset.status }}</span>

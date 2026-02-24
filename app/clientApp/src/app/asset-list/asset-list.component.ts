@@ -9,7 +9,7 @@ interface Asset {
   type: string;
   location: string;
   status: string;
-  last_updated: Date;
+  last_updated: string;
 }
 
 @Component({

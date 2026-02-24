@@ -1,1 +1,10 @@
-<app-asset-list />
+<div class="app-shell">
+  <header class="workspace-nav" aria-label="Primary navigation">
+    <a routerLink="/assets" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >Assets</a
+    >
+    <a routerLink="/telemetry" routerLinkActive="active">Telemetry</a>
+  </header>
+
+  <router-outlet />
+</div>

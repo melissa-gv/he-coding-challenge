@@ -1,41 +1,29 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter, withDisabledInitialNavigation } from '@angular/router';
 import { App } from './app';
+import { routes } from './app.routes';
 
 describe('App', () => {
-  let httpTestingController: HttpTestingController;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideRouter(routes, withDisabledInitialNavigation())]
     }).compileComponents();
-
-    httpTestingController = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpTestingController.verify();
   });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
-    const request = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    request.flush([]);
     const app = fixture.componentInstance;
 
     expect(app).toBeTruthy();
   });
 
-  it('should render the asset list shell', () => {
+  it('should render assets and telemetry navigation tabs', () => {
     const fixture = TestBed.createComponent(App);
-    const request = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    request.flush([]);
-
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Asset List');
+    expect(compiled.textContent).toContain('Assets');
+    expect(compiled.textContent).toContain('Telemetry');
   });
 });

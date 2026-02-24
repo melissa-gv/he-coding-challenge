@@ -26,6 +26,24 @@ For a complete list of available schematics (such as `components`, `directives`,
 ng generate --help
 ```
 
+## Component Structure Convention
+
+Every Angular component must be created in its own folder.
+
+Preferred pattern:
+
+```text
+src/app/<feature>/<component-name>/<component-name>.component.{ts,html,scss,spec.ts}
+```
+
+Example:
+
+```bash
+ng generate component telemetry/telemetry-dashboard
+```
+
+This rule applies to all new components going forward.
+
 ## Building
 
 To build the project run:

@@ -1,3 +1,36 @@
 :host {
   display: block;
 }
+
+.workspace-nav {
+  position: fixed;
+  top: 0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.35rem;
+
+  border: 1px solid rgba(27, 44, 66, 0.4);
+  border-radius: 999px;
+  background: rgba(9, 18, 32, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.workspace-nav a {
+  color: #9ab5d2;
+  text-decoration: none;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.workspace-nav a.active {
+  background: rgba(95, 241, 195, 0.2);
+  color: #6cf2cb;
+}

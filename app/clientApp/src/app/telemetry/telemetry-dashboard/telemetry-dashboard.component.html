@@ -1,0 +1,61 @@
+<main class="telemetry-shell">
+  <header class="telemetry-header">
+    <div>
+      <p class="kicker">Asset Monitoring / Telemetry Comparison</p>
+      <h1>Telemetry Display</h1>
+      <p class="subtitle">Select up to 3 assets and compare live operating metrics at a glance.</p>
+    </div>
+
+    <div class="live-panel">
+      <p class="live-line"><span class="live-dot"></span>Live</p>
+      @if (lastLiveUpdate()) {
+        <p class="live-time">{{ lastLiveUpdate() | date: 'mediumTime' }}</p>
+      }
+      <button type="button" class="refresh-button" (click)="refreshTelemetry()">Refresh</button>
+    </div>
+  </header>
+
+  @if (isLoadingAssets()) {
+    <section class="message-box">Loading telemetry assets...</section>
+  } @else {
+    <app-telemetry-asset-selector
+      [assets]="assets()"
+      [selectedAssetIds]="selectedAssetIds()"
+      [maxSelection]="3"
+      (selectedAssetIdsChange)="onSelectedAssetIdsChange($event)"
+    />
+
+    @if (errorMessage()) {
+      <section class="message-box error-box">{{ errorMessage() }}</section>
+    } @else if (!selectedAssetIds().length) {
+      <section class="message-box">Select at least one asset to view telemetry.</section>
+    } @else {
+      @if (isLoadingTelemetry() && !hasTelemetryData()) {
+        <section class="message-box">Loading telemetry data...</section>
+      }
+
+      <section class="telemetry-grid" [style.--selected-count]="selectedAssets().length">
+        @for (metric of metrics; track metric.key) {
+          <article class="metric-label-card">
+            <p>{{ metric.label }}</p>
+            <span>{{ metric.unit }}</span>
+          </article>
+
+          @for (asset of selectedAssets(); track asset.id) {
+            <app-telemetry-metric-card
+              [assetName]="asset.name"
+              [assetType]="asset.type"
+              [status]="telemetryStatus(asset.id)"
+              [metricLabel]="metric.label"
+              [unit]="metric.unit"
+              [value]="metricValue(asset.id, metric.key)"
+              [delta]="metricDelta(asset.id, metric.key)"
+              [meterPercent]="meterPercent(asset.id, metric)"
+              [severity]="metricSeverity(asset.id, metric)"
+            />
+          }
+        }
+      </section>
+    }
+  }
+</main>

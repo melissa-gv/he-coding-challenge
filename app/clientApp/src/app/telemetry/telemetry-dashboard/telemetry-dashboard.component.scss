@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 5%, rgba(59, 229, 181, 0.12) 0, rgba(59, 229, 181, 0) 38%),
+    radial-gradient(circle at 88% 10%, rgba(236, 172, 84, 0.12) 0, rgba(236, 172, 84, 0) 42%),
+    #050b15;
+  color: #e4edfb;
+  font-family: 'Avenir Next', 'Segoe UI Variable', 'Trebuchet MS', sans-serif;
+}
+
+.telemetry-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 4rem 1.25rem 3rem;
+}
+
+.telemetry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.4rem;
+  margin-bottom: 1.2rem;
+}
+
+.kicker {
+  margin: 0;
+  color: #7f9ab9;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+h1 {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  color: #97abc7;
+  max-width: 56ch;
+}
+
+.live-panel {
+  border: 1px solid #253755;
+  border-radius: 10px;
+  background: rgba(8, 14, 25, 0.85);
+  padding: 0.7rem 0.8rem;
+  min-width: 170px;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.live-line {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: #55efc3;
+  font-size: 0.74rem;
+}
+
+.live-dot {
+  display: inline-block;
+  width: 0.56rem;
+  height: 0.56rem;
+  border-radius: 50%;
+  margin-right: 0.35rem;
+  background: #34e6b2;
+  box-shadow: 0 0 14px rgba(52, 230, 178, 0.8);
+}
+
+.live-time {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #aac1dd;
+}
+
+.refresh-button {
+  border: 1px solid rgba(52, 230, 178, 0.35);
+  border-radius: 999px;
+  background: rgba(52, 230, 178, 0.15);
+  color: #6bf2ca;
+  padding: 0.35rem 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.message-box {
+  border: 1px solid #29415f;
+  border-radius: 10px;
+  background: rgba(11, 18, 31, 0.88);
+  padding: 0.9rem;
+  color: #afc4df;
+  margin-bottom: 1rem;
+}
+
+.error-box {
+  border-color: #7b3341;
+  color: #f3b1bb;
+}
+
+.telemetry-grid {
+  --selected-count: 1;
+
+  display: grid;
+  grid-template-columns: minmax(170px, 220px) repeat(var(--selected-count), minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.metric-label-card {
+  border: 1px solid #263a59;
+  border-radius: 10px;
+  background: rgba(8, 14, 24, 0.9);
+  padding: 0.85rem;
+  display: grid;
+  align-content: center;
+  gap: 0.35rem;
+}
+
+.metric-label-card p {
+  margin: 0;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.metric-label-card span {
+  color: #7992b2;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+}
+
+@media (max-width: 1120px) {
+  .telemetry-grid {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .telemetry-header {
+    flex-direction: column;
+  }
+
+  .live-panel {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .telemetry-grid {
+    grid-template-columns: 1fr;
+  }
+}

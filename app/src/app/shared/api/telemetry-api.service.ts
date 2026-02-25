@@ -2,8 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { TelemetrySnapshot } from '../models/telemetry-snapshot.models';
+import { API_PREFIX } from './api-base-url';
 
-const TELEMETRY_API_URL = 'http://localhost:8000/api/telemetry';
+const TELEMETRY_API_URL = `${API_PREFIX}/telemetry`;
 
 @Injectable({
   providedIn: 'root'

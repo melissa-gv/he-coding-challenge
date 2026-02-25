@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AssetConfiguration } from '../models/asset-configuration.models';
+import { API_PREFIX } from './api-base-url';
 
-const CONFIGURATION_API_URL = 'http://localhost:8000/api/configuration';
+const CONFIGURATION_API_URL = `${API_PREFIX}/configuration`;
 
 @Injectable({
   providedIn: 'root'

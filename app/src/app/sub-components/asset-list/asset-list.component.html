@@ -35,6 +35,7 @@
           <th>Type</th>
           <th>Location</th>
           <th>Status</th>
+          <th class="configure-col">Configure</th>
         </tr>
       </ng-template>
 
@@ -46,8 +47,27 @@
           <td>
             <p-tag [value]="asset.status | titlecase" [severity]="statusSeverity(asset.status)" />
           </td>
+          <td class="configure-cell">
+            <p-button
+              icon="pi pi-cog"
+              [rounded]="true"
+              [text]="true"
+              size="small"
+              ariaLabel="Configure asset"
+              styleClass="asset-config-button"
+              (onClick)="openConfigurationDialog(asset)"
+            />
+          </td>
         </tr>
       </ng-template>
     </p-table>
+  }
+
+  @defer (when isConfigurationDialogVisible()) {
+    <app-asset-configuration-dialog
+      [visible]="isConfigurationDialogVisible()"
+      [asset]="selectedConfigurationAsset()"
+      (visibleChange)="onConfigurationDialogVisibleChange($event)"
+    />
   }
 </section>

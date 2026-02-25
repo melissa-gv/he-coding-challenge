@@ -1,0 +1,261 @@
+<p-dialog
+  [visible]="visible()"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(56rem, 96vw)' }"
+  [header]="dialogTitle()"
+  (visibleChange)="onDialogVisibilityChange($event)"
+>
+  @if (asset()) {
+    @if (isLoadingConfiguration()) {
+      <p-message severity="info">Loading configuration...</p-message>
+    }
+
+    @if (loadError()) {
+      <p-message severity="error">{{ loadError() ?? '' }}</p-message>
+    }
+
+    @if (submitSuccess()) {
+      <p-message severity="success">{{ submitSuccess() ?? '' }}</p-message>
+    }
+
+    @if (submitError()) {
+      <p-message severity="error">{{ submitError() ?? '' }}</p-message>
+    }
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submitConfiguration()">
+      <div class="field-grid">
+        <div class="field">
+          <label for="asset-id">Asset ID</label>
+          <input pInputText id="asset-id" formControlName="asset_id" readonly />
+          @if (hasControlError('asset_id')) {
+            <small class="field-error">{{ controlErrorMessage('asset_id') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input pInputText id="name" formControlName="name" />
+          @if (hasControlError('name')) {
+            <small class="field-error">{{ controlErrorMessage('name') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="priority">Priority</label>
+          <p-select
+            inputId="priority"
+            formControlName="priority"
+            [options]="priorityOptions"
+            optionLabel="label"
+            optionValue="value"
+          />
+          @if (hasControlError('priority')) {
+            <small class="field-error">{{ controlErrorMessage('priority') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="maintenance-mode">Maintenance Mode</label>
+          <p-select
+            inputId="maintenance-mode"
+            formControlName="maintenance_mode"
+            [options]="maintenanceModeOptions"
+            optionLabel="label"
+            optionValue="value"
+          />
+          @if (hasControlError('maintenance_mode')) {
+            <small class="field-error">{{ controlErrorMessage('maintenance_mode') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="operating-mode">Operating Mode</label>
+          <p-select
+            inputId="operating-mode"
+            formControlName="operating_mode"
+            [options]="operatingModeOptions"
+            optionLabel="label"
+            optionValue="value"
+          />
+          @if (hasControlError('operating_mode')) {
+            <small class="field-error">{{ controlErrorMessage('operating_mode') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="maintenance-interval">Maintenance Interval (days)</label>
+          <input
+            pInputText
+            id="maintenance-interval"
+            type="number"
+            formControlName="maintenance_interval_days"
+            min="1"
+            max="365"
+            step="1"
+          />
+          @if (hasControlError('maintenance_interval_days')) {
+            <small class="field-error">{{ controlErrorMessage('maintenance_interval_days') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="runtime">Max Runtime (hours)</label>
+          <input
+            pInputText
+            id="runtime"
+            type="number"
+            formControlName="max_runtime_hours"
+            min="1"
+            max="100000"
+            step="1"
+          />
+          @if (hasControlError('max_runtime_hours')) {
+            <small class="field-error">{{ controlErrorMessage('max_runtime_hours') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="warning-threshold">Warning Threshold (%)</label>
+          <input
+            pInputText
+            id="warning-threshold"
+            type="number"
+            formControlName="warning_threshold_percent"
+            min="0"
+            max="100"
+            step="1"
+          />
+          @if (hasControlError('warning_threshold_percent')) {
+            <small class="field-error">{{ controlErrorMessage('warning_threshold_percent') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="max-temp">Max Temperature (C)</label>
+          <input
+            pInputText
+            id="max-temp"
+            type="number"
+            formControlName="max_temperature_celsius"
+            min="-50"
+            max="200"
+            step="0.01"
+          />
+          @if (hasControlError('max_temperature_celsius')) {
+            <small class="field-error">{{ controlErrorMessage('max_temperature_celsius') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="max-pressure">Max Pressure (psi)</label>
+          <input
+            pInputText
+            id="max-pressure"
+            type="number"
+            formControlName="max_pressure_psi"
+            min="0"
+            max="10000"
+            step="0.01"
+          />
+          @if (hasControlError('max_pressure_psi')) {
+            <small class="field-error">{{ controlErrorMessage('max_pressure_psi') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="efficiency">Efficiency Target (%)</label>
+          <input
+            pInputText
+            id="efficiency"
+            type="number"
+            formControlName="efficiency_target_percent"
+            min="0"
+            max="100"
+            step="0.01"
+          />
+          @if (hasControlError('efficiency_target_percent')) {
+            <small class="field-error">{{ controlErrorMessage('efficiency_target_percent') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="power-factor">Power Factor</label>
+          <input
+            pInputText
+            id="power-factor"
+            type="number"
+            formControlName="power_factor"
+            min="-1"
+            max="1"
+            step="0.001"
+          />
+          @if (hasControlError('power_factor')) {
+            <small class="field-error">{{ controlErrorMessage('power_factor') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="load-capacity">Load Capacity (%)</label>
+          <input
+            pInputText
+            id="load-capacity"
+            type="number"
+            formControlName="load_capacity_percent"
+            min="0"
+            max="150"
+            step="0.01"
+          />
+          @if (hasControlError('load_capacity_percent')) {
+            <small class="field-error">{{ controlErrorMessage('load_capacity_percent') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="alert-email">Alert Email</label>
+          <input
+            pInputText
+            id="alert-email"
+            formControlName="alert_email"
+            placeholder="ops@example.com"
+          />
+          @if (hasControlError('alert_email')) {
+            <small class="field-error">{{ controlErrorMessage('alert_email') }}</small>
+          }
+        </div>
+
+        <div class="field field-span-2">
+          <label for="location">Location</label>
+          <input pInputText id="location" formControlName="location" />
+          @if (hasControlError('location')) {
+            <small class="field-error">{{ controlErrorMessage('location') }}</small>
+          }
+        </div>
+
+        <div class="field field-span-2">
+          <label for="notes">Notes</label>
+          <textarea pTextarea id="notes" rows="3" formControlName="notes"></textarea>
+          @if (hasControlError('notes')) {
+            <small class="field-error">{{ controlErrorMessage('notes') }}</small>
+          }
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <p-button
+          label="Cancel"
+          severity="secondary"
+          variant="outlined"
+          type="button"
+          (onClick)="onDialogVisibilityChange(false)"
+        />
+        <p-button
+          label="Save Configuration"
+          type="submit"
+          [loading]="isSaving()"
+        />
+      </div>
+    </form>
+  }
+</p-dialog>

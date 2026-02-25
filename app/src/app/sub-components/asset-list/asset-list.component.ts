@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { AssetConfigurationDialogComponent } from './asset-configuration-dialog/asset-configuration-dialog.component';
+import { Asset } from '../../shared/models/asset.models';
 import { AssetStoreService } from '../../shared/store/asset-store.service';
 
 @Component({
   selector: 'app-asset-list',
-  imports: [CommonModule, ButtonModule, MessageModule, TableModule, TagModule],
+  imports: [CommonModule, ButtonModule, MessageModule, TableModule, TagModule, AssetConfigurationDialogComponent],
   templateUrl: './asset-list.component.html',
   styleUrl: './asset-list.component.scss'
 })
@@ -18,9 +20,24 @@ export class AssetListComponent {
   protected readonly assets = this.assetStore.assets;
   protected readonly isLoading = this.assetStore.isLoadingAssets;
   protected readonly errorMessage = this.assetStore.assetsError;
+  protected readonly isConfigurationDialogVisible = signal<boolean>(false);
+  protected readonly selectedConfigurationAsset = signal<Asset | null>(null);
 
   protected loadAssets(): void {
     this.assetStore.loadAssets();
+  }
+
+  protected openConfigurationDialog(asset: Asset): void {
+    this.selectedConfigurationAsset.set(asset);
+    this.isConfigurationDialogVisible.set(true);
+  }
+
+  protected onConfigurationDialogVisibleChange(visible: boolean): void {
+    this.isConfigurationDialogVisible.set(visible);
+
+    if (!visible) {
+      this.selectedConfigurationAsset.set(null);
+    }
   }
 
   protected statusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {

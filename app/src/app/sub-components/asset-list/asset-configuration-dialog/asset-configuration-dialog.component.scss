@@ -1,0 +1,57 @@
+.config-form {
+  margin-top: 0.65rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  letter-spacing: 0.02em;
+}
+
+.field-span-2 {
+  grid-column: span 2;
+}
+
+:host ::ng-deep .field .p-select,
+:host ::ng-deep .field .p-inputnumber,
+:host ::ng-deep .field input,
+:host ::ng-deep .field textarea {
+  width: 100%;
+}
+
+:host ::ng-deep .field textarea {
+  resize: vertical;
+}
+
+.field-error {
+  color: #ff9090;
+  font-size: 0.74rem;
+}
+
+.dialog-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (max-width: 760px) {
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-span-2 {
+    grid-column: span 1;
+  }
+}

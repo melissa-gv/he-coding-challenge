@@ -50,7 +50,8 @@ describe('AssetListComponent', () => {
     const content = compiled.textContent ?? '';
 
     expect(compiled.querySelector('.asset-table')).toBeTruthy();
-    expect(compiled.querySelectorAll('.asset-table th').length).toBe(4);
+    expect(compiled.querySelectorAll('.asset-table th').length).toBe(5);
+    expect(compiled.querySelector('.asset-config-button .pi-cog')).toBeTruthy();
     expect(content).toContain('Primary Cooling Pump');
     expect(content.toLowerCase()).toContain('pump');
     expect(content).toContain('Building A - Floor 1');

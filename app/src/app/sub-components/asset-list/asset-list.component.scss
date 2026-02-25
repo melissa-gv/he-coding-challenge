@@ -31,6 +31,16 @@
   border-color: #223656;
 }
 
+.configure-col,
+.configure-cell {
+  width: 6.5rem;
+  text-align: center;
+}
+
+:host ::ng-deep .asset-config-button {
+  color: var(--text-main);
+}
+
 @media (max-width: 780px) {
   .section-header {
     flex-direction: column;

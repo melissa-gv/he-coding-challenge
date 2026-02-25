@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import { TelemetryMetricRow } from '../telemetry.models';
+import { TelemetryMetricRow } from '../../../shared/models/telemetry-metric.models';
 
 @Component({
   selector: 'app-telemetry-asset-card',

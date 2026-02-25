@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { AssetListComponent } from './asset-list/asset-list.component';
-import { TelemetryDashboardComponent } from './telemetry/telemetry-dashboard/telemetry-dashboard.component';
+import { AssetListComponent } from './sub-components/asset-list/asset-list.component';
+import { TelemetryDashboardComponent } from './sub-components/telemetry/telemetry-dashboard/telemetry-dashboard.component';
 
 export const routes: Routes = [
   {

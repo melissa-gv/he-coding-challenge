@@ -1,12 +1,14 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AppDataStoreService } from '../../shared/data-store/app-data-store.service';
+import { AssetStoreService } from '../../../shared/store/asset-store.service';
+import { TelemetryStoreService } from '../../../shared/store/telemetry-store.service';
 import { TelemetryDashboardComponent } from './telemetry-dashboard.component';
 
 describe('TelemetryDashboardComponent', () => {
   let httpTestingController: HttpTestingController;
-  let dataStore: AppDataStoreService;
+  let assetStore: AssetStoreService;
+  let telemetryStore: TelemetryStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,18 +17,20 @@ describe('TelemetryDashboardComponent', () => {
     }).compileComponents();
 
     httpTestingController = TestBed.inject(HttpTestingController);
-    dataStore = TestBed.inject(AppDataStoreService);
+    assetStore = TestBed.inject(AssetStoreService);
+    telemetryStore = TestBed.inject(TelemetryStoreService);
   });
 
   afterEach(() => {
-    dataStore.stopPolling();
+    telemetryStore.stopPolling();
     httpTestingController.verify();
   });
 
-  it('renders one telemetry card per selected asset with metrics inside', () => {
+  it('renders one telemetry card per selected asset with metrics inside', async () => {
     const fixture = TestBed.createComponent(TelemetryDashboardComponent);
 
-    dataStore.initialize();
+    assetStore.initialize();
+    telemetryStore.initialize();
 
     const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
     assetsRequest.flush([
@@ -55,6 +59,8 @@ describe('TelemetryDashboardComponent', () => {
         last_updated: '2024-01-15T10:26:00Z'
       }
     ]);
+
+    await fixture.whenStable();
 
     const telemetryRequestOne = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
     const telemetryRequestTwo = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002');
@@ -94,7 +100,7 @@ describe('TelemetryDashboardComponent', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(dataStore.selectedAssetIds().length).toBe(3);
+    expect(telemetryStore.selectedAssetIds().length).toBe(3);
     expect(compiled.textContent).toContain('Telemetry Display');
     expect(compiled.textContent).toContain('Primary Cooling Pump');
     expect(compiled.textContent).toContain('Air Compressor Unit 1');

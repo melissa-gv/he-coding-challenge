@@ -5,8 +5,9 @@ import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
-import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
-import { PowerDataPoint } from '../telemetry/telemetry.models';
+import { PowerDataPoint } from '../../shared/models/power-history.models';
+import { AssetStoreService } from '../../shared/store/asset-store.service';
+import { PowerStoreService } from '../../shared/store/power-store.service';
 import type { ChartData, ChartDataset, ChartOptions } from 'chart.js';
 
 @Component({
@@ -16,15 +17,16 @@ import type { ChartData, ChartDataset, ChartOptions } from 'chart.js';
   styleUrl: './power-visualization.component.scss'
 })
 export class PowerVisualizationComponent {
-  private readonly dataStore = inject(AppDataStoreService);
+  private readonly assetStore = inject(AssetStoreService);
+  private readonly powerStore = inject(PowerStoreService);
 
-  protected readonly assets = this.dataStore.assets;
-  protected readonly isLoadingAssets = this.dataStore.isLoadingAssets;
-  protected readonly assetsError = this.dataStore.assetsError;
-  protected readonly selectedPowerAssetId = this.dataStore.selectedPowerAssetId;
-  protected readonly isLoadingPower = this.dataStore.isLoadingPower;
-  protected readonly powerError = this.dataStore.powerError;
-  protected readonly selectedPowerData = this.dataStore.selectedPowerData;
+  protected readonly assets = this.assetStore.assets;
+  protected readonly isLoadingAssets = this.assetStore.isLoadingAssets;
+  protected readonly assetsError = this.assetStore.assetsError;
+  protected readonly selectedPowerAssetId = this.powerStore.selectedPowerAssetId;
+  protected readonly isLoadingPower = this.powerStore.isLoadingPower;
+  protected readonly powerError = this.powerStore.powerError;
+  protected readonly selectedPowerData = this.powerStore.selectedPowerData;
   protected readonly selectedPowerAsset = computed(() => {
     const assetId = this.selectedPowerAssetId();
     return this.assets().find((asset) => asset.id === assetId) ?? null;
@@ -159,16 +161,16 @@ export class PowerVisualizationComponent {
 
   constructor() {
     effect(() => {
-      this.dataStore.refreshPowerData(this.selectedPowerAssetId());
+      this.powerStore.refreshPowerData(this.selectedPowerAssetId());
     });
   }
 
   protected onSelectedPowerAssetChange(assetId: string | null): void {
-    this.dataStore.setSelectedPowerAssetId(assetId);
+    this.powerStore.setSelectedPowerAssetId(assetId);
   }
 
   protected refreshPowerData(): void {
-    this.dataStore.refreshPowerData(this.selectedPowerAssetId());
+    this.powerStore.refreshPowerData(this.selectedPowerAssetId());
   }
 
   private createLineDataset(

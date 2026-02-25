@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
+import { AssetStoreService } from '../../shared/store/asset-store.service';
 
 @Component({
   selector: 'app-asset-list',
@@ -13,14 +13,14 @@ import { AppDataStoreService } from '../shared/data-store/app-data-store.service
   styleUrl: './asset-list.component.scss'
 })
 export class AssetListComponent {
-  private readonly dataStore = inject(AppDataStoreService);
+  private readonly assetStore = inject(AssetStoreService);
 
-  protected readonly assets = this.dataStore.assets;
-  protected readonly isLoading = this.dataStore.isLoadingAssets;
-  protected readonly errorMessage = this.dataStore.assetsError;
+  protected readonly assets = this.assetStore.assets;
+  protected readonly isLoading = this.assetStore.isLoadingAssets;
+  protected readonly errorMessage = this.assetStore.assetsError;
 
   protected loadAssets(): void {
-    this.dataStore.loadAssets();
+    this.assetStore.loadAssets();
   }
 
   protected statusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {

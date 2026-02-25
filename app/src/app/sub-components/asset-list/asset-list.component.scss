@@ -4,13 +4,13 @@
   justify-items: start;
 }
 
-:host ::ng-deep .asset-table {
+.asset-table {
   border: 1px solid #223656;
   border-radius: 10px;
   overflow: hidden;
 }
 
-:host ::ng-deep .asset-table .p-datatable-header-cell {
+.asset-table .p-datatable-header-cell {
   background: #16253d;
   color: #c9def8;
   text-transform: uppercase;

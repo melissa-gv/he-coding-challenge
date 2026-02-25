@@ -1,12 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
 import { AssetListComponent } from './asset-list.component';
 
 describe('AssetListComponent', () => {
   let httpTestingController: HttpTestingController;
-  let dataStore: AppDataStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,11 +13,9 @@ describe('AssetListComponent', () => {
     }).compileComponents();
 
     httpTestingController = TestBed.inject(HttpTestingController);
-    dataStore = TestBed.inject(AppDataStoreService);
   });
 
   afterEach(() => {
-    dataStore.stopPolling();
     httpTestingController.verify();
   });
 
@@ -47,17 +43,6 @@ describe('AssetListComponent', () => {
         last_updated: '2024-01-15T10:30:00Z'
       }
     ]);
-
-    const telemetryRequest = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    telemetryRequest.flush({
-      asset_id: 'AST-001',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 71.4,
-      pressure: 118.2,
-      vibration: 2.5,
-      power_consumption: 18.9,
-      status: 'operational'
-    });
 
     fixture.detectChanges();
 

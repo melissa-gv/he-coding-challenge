@@ -2,11 +2,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { vi } from 'vitest';
-import { AppDataStoreService } from './app-data-store.service';
+import { AssetStoreService } from './asset-store.service';
+import { TelemetryStoreService } from './telemetry-store.service';
 
-describe('AppDataStoreService', () => {
+describe('TelemetryStoreService', () => {
   let httpTestingController: HttpTestingController;
-  let store: AppDataStoreService;
+  let assetStore: AssetStoreService;
+  let telemetryStore: TelemetryStoreService;
 
   const assetsFixture = [
     {
@@ -49,63 +51,21 @@ describe('AppDataStoreService', () => {
     });
 
     httpTestingController = TestBed.inject(HttpTestingController);
-    store = TestBed.inject(AppDataStoreService);
+    assetStore = TestBed.inject(AssetStoreService);
+    telemetryStore = TestBed.inject(TelemetryStoreService);
   });
 
   afterEach(() => {
-    store.stopPolling();
+    telemetryStore.stopPolling();
     httpTestingController.verify();
   });
 
-  it('loads assets and defaults to first three selected assets', () => {
-    store.initialize();
+  it('loads telemetry and defaults selection to first three assets', async () => {
+    assetStore.initialize();
+    telemetryStore.initialize();
 
-    const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    assetsRequest.flush(assetsFixture);
-
-    const telemetryRequestOne = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    const telemetryRequestTwo = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002');
-    const telemetryRequestThree = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003');
-
-    telemetryRequestOne.flush({
-      asset_id: 'AST-001',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 70,
-      pressure: 110,
-      vibration: 2,
-      power_consumption: 20,
-      status: 'operational'
-    });
-
-    telemetryRequestTwo.flush({
-      asset_id: 'AST-002',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 80,
-      pressure: 120,
-      vibration: 3,
-      power_consumption: 30,
-      status: 'operational'
-    });
-
-    telemetryRequestThree.flush({
-      asset_id: 'AST-003',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 60,
-      pressure: 100,
-      vibration: 1,
-      power_consumption: 40,
-      status: 'standby'
-    });
-
-    expect(store.assets().length).toBe(4);
-    expect(store.selectedAssetIds()).toEqual(['AST-001', 'AST-002', 'AST-003']);
-  });
-
-  it('enforces selection limit to three assets', () => {
-    store.initialize();
-
-    const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    assetsRequest.flush(assetsFixture);
+    httpTestingController.expectOne('http://localhost:8000/api/assets').flush(assetsFixture);
+    TestBed.flushEffects();
 
     httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
       asset_id: 'AST-001',
@@ -137,13 +97,47 @@ describe('AppDataStoreService', () => {
       status: 'standby'
     });
 
-    store.setSelectedAssetIds(['AST-004', 'AST-003', 'AST-002', 'AST-001']);
+    expect(telemetryStore.selectedAssetIds()).toEqual(['AST-001', 'AST-002', 'AST-003']);
+    expect(Object.keys(telemetryStore.telemetryByAssetId()).length).toBe(3);
+  });
 
-    const telemetryRequestOne = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-004');
-    const telemetryRequestTwo = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003');
-    const telemetryRequestThree = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002');
+  it('enforces max selection of three assets', async () => {
+    assetStore.initialize();
+    telemetryStore.initialize();
 
-    telemetryRequestOne.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/assets').flush(assetsFixture);
+    TestBed.flushEffects();
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
+      asset_id: 'AST-001',
+      timestamp: '2024-01-15T10:30:00Z',
+      temperature: 70,
+      pressure: 110,
+      vibration: 2,
+      power_consumption: 20,
+      status: 'operational'
+    });
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
+      asset_id: 'AST-002',
+      timestamp: '2024-01-15T10:30:00Z',
+      temperature: 80,
+      pressure: 120,
+      vibration: 3,
+      power_consumption: 30,
+      status: 'operational'
+    });
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
+      asset_id: 'AST-003',
+      timestamp: '2024-01-15T10:30:00Z',
+      temperature: 60,
+      pressure: 100,
+      vibration: 1,
+      power_consumption: 40,
+      status: 'standby'
+    });
+
+    telemetryStore.setSelectedAssetIds(['AST-004', 'AST-003', 'AST-002', 'AST-001']);
+
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-004').flush({
       asset_id: 'AST-004',
       timestamp: '2024-01-15T10:31:00Z',
       temperature: 73,
@@ -153,7 +147,7 @@ describe('AppDataStoreService', () => {
       status: 'maintenance'
     });
 
-    telemetryRequestTwo.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
       asset_id: 'AST-003',
       timestamp: '2024-01-15T10:31:00Z',
       temperature: 63,
@@ -163,7 +157,7 @@ describe('AppDataStoreService', () => {
       status: 'standby'
     });
 
-    telemetryRequestThree.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
       asset_id: 'AST-002',
       timestamp: '2024-01-15T10:31:00Z',
       temperature: 82,
@@ -173,17 +167,17 @@ describe('AppDataStoreService', () => {
       status: 'operational'
     });
 
-    expect(store.selectedAssetIds()).toEqual(['AST-004', 'AST-003', 'AST-002']);
+    expect(telemetryStore.selectedAssetIds()).toEqual(['AST-004', 'AST-003', 'AST-002']);
   });
 
-  it('triggers periodic polling refreshes', () => {
+  it('polls telemetry every 5 seconds', () => {
     vi.useFakeTimers();
     try {
-      store.initialize();
+      assetStore.initialize();
+      telemetryStore.initialize();
 
-      const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-      assetsRequest.flush(assetsFixture);
-
+      httpTestingController.expectOne('http://localhost:8000/api/assets').flush(assetsFixture);
+      TestBed.flushEffects();
       httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
         asset_id: 'AST-001',
         timestamp: '2024-01-15T10:30:00Z',
@@ -193,7 +187,6 @@ describe('AppDataStoreService', () => {
         power_consumption: 20,
         status: 'operational'
       });
-
       httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
         asset_id: 'AST-002',
         timestamp: '2024-01-15T10:30:00Z',
@@ -203,7 +196,6 @@ describe('AppDataStoreService', () => {
         power_consumption: 30,
         status: 'operational'
       });
-
       httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
         asset_id: 'AST-003',
         timestamp: '2024-01-15T10:30:00Z',
@@ -225,7 +217,6 @@ describe('AppDataStoreService', () => {
         power_consumption: 21,
         status: 'operational'
       });
-
       httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
         asset_id: 'AST-002',
         timestamp: '2024-01-15T10:35:00Z',
@@ -235,7 +226,6 @@ describe('AppDataStoreService', () => {
         power_consumption: 31,
         status: 'operational'
       });
-
       httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
         asset_id: 'AST-003',
         timestamp: '2024-01-15T10:35:00Z',
@@ -246,27 +236,19 @@ describe('AppDataStoreService', () => {
         status: 'standby'
       });
 
-      expect(store.lastLiveUpdate()).toBeTruthy();
+      expect(telemetryStore.lastLiveUpdate()).toBeTruthy();
     } finally {
       vi.useRealTimers();
     }
   });
 
-  it('sets and clears error states for assets and telemetry', () => {
-    store.initialize();
+  it('sets and clears telemetry errors', async () => {
+    assetStore.initialize();
+    telemetryStore.initialize();
 
-    const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    assetsRequest.flush('boom', { status: 500, statusText: 'Server Error' });
-
-    expect(store.assetsError()).toContain('Unable to load assets');
-
-    store.loadAssets();
-
-    const retryAssetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    retryAssetsRequest.flush(assetsFixture.slice(0, 1));
-
-    const initialTelemetryRequest = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    initialTelemetryRequest.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/assets').flush(assetsFixture.slice(0, 1));
+    TestBed.flushEffects();
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
       asset_id: 'AST-001',
       timestamp: '2024-01-15T10:30:00Z',
       temperature: 70,
@@ -276,19 +258,16 @@ describe('AppDataStoreService', () => {
       status: 'operational'
     });
 
-    expect(store.assetsError()).toBeNull();
+    telemetryStore.refreshTelemetry();
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush('boom', {
+      status: 500,
+      statusText: 'Server Error'
+    });
 
-    store.refreshTelemetry();
+    expect(telemetryStore.telemetryError()).toContain('Unable to load telemetry');
 
-    const telemetryErrorRequest = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    telemetryErrorRequest.flush('boom', { status: 500, statusText: 'Server Error' });
-
-    expect(store.telemetryError()).toContain('Unable to load telemetry');
-
-    store.refreshTelemetry();
-
-    const telemetryRetryRequest = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    telemetryRetryRequest.flush({
+    telemetryStore.refreshTelemetry();
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
       asset_id: 'AST-001',
       timestamp: '2024-01-15T10:33:00Z',
       temperature: 72,
@@ -298,24 +277,6 @@ describe('AppDataStoreService', () => {
       status: 'operational'
     });
 
-    expect(store.telemetryError()).toBeNull();
-  });
-
-  it('loads power history and forecast for a given asset', () => {
-    store.refreshPowerData('AST-003');
-
-    const powerRequest = httpTestingController.expectOne('http://localhost:8000/api/power/AST-003');
-    powerRequest.flush({
-      asset_id: 'AST-003',
-      asset_name: 'Backup Generator',
-      asset_type: 'generator',
-      history: [{ timestamp: '2024-01-15T08:00:00Z', power_kw: -96.4, efficiency: 32.1 }],
-      forecast: [{ timestamp: '2024-01-15T16:00:00Z', power_kw: -101.2, efficiency: 30.4 }],
-      metadata: {}
-    });
-
-    expect(store.powerError()).toBeNull();
-    expect(store.powerByAssetId()['AST-003']?.history.length).toBe(1);
-    expect(store.powerByAssetId()['AST-003']?.forecast.length).toBe(1);
+    expect(telemetryStore.telemetryError()).toBeNull();
   });
 });

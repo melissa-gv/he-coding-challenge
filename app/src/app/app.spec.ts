@@ -2,11 +2,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
-import { AppDataStoreService } from './shared/data-store/app-data-store.service';
+import { TelemetryStoreService } from './shared/store/telemetry-store.service';
 
 describe('App', () => {
   let httpTestingController: HttpTestingController;
-  let dataStore: AppDataStoreService;
+  let telemetryStore: TelemetryStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,11 +15,11 @@ describe('App', () => {
     }).compileComponents();
 
     httpTestingController = TestBed.inject(HttpTestingController);
-    dataStore = TestBed.inject(AppDataStoreService);
+    telemetryStore = TestBed.inject(TelemetryStoreService);
   });
 
   afterEach(() => {
-    dataStore.stopPolling();
+    telemetryStore.stopPolling();
     httpTestingController.verify();
   });
 
@@ -32,7 +32,7 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render both sections and use a shared assets request', () => {
+  it('should render both sections and use a shared assets request', async () => {
     const fixture = TestBed.createComponent(App);
 
     const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
@@ -62,6 +62,8 @@ describe('App', () => {
         last_updated: '2024-01-15T10:26:00Z'
       }
     ]);
+
+    await fixture.whenStable();
 
     const telemetryRequestOne = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
     const telemetryRequestTwo = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002');

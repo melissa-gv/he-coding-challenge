@@ -1,12 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
+import { AssetStoreService } from '../../shared/store/asset-store.service';
 import { PowerVisualizationComponent } from './power-visualization.component';
 
 describe('PowerVisualizationComponent', () => {
   let httpTestingController: HttpTestingController;
-  let dataStore: AppDataStoreService;
+  let assetStore: AssetStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -15,18 +15,17 @@ describe('PowerVisualizationComponent', () => {
     }).compileComponents();
 
     httpTestingController = TestBed.inject(HttpTestingController);
-    dataStore = TestBed.inject(AppDataStoreService);
+    assetStore = TestBed.inject(AssetStoreService);
   });
 
   afterEach(() => {
-    dataStore.stopPolling();
     httpTestingController.verify();
   });
 
   it('renders a power section with asset select and chart', () => {
     const fixture = TestBed.createComponent(PowerVisualizationComponent);
 
-    dataStore.initialize();
+    assetStore.initialize();
 
     httpTestingController.expectOne('http://localhost:8000/api/assets').flush([
       {
@@ -54,36 +53,6 @@ describe('PowerVisualizationComponent', () => {
         last_updated: '2024-01-15T10:26:00Z'
       }
     ]);
-
-    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
-      asset_id: 'AST-001',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 71.4,
-      pressure: 118.2,
-      vibration: 2.5,
-      power_consumption: 18.9,
-      status: 'operational'
-    });
-
-    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
-      asset_id: 'AST-002',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 93.2,
-      pressure: 151.7,
-      vibration: 5.1,
-      power_consumption: 54.1,
-      status: 'operational'
-    });
-
-    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
-      asset_id: 'AST-003',
-      timestamp: '2024-01-15T10:30:00Z',
-      temperature: 64.2,
-      pressure: 114.3,
-      vibration: 1.8,
-      power_consumption: 40.7,
-      status: 'standby'
-    });
 
     fixture.detectChanges();
 

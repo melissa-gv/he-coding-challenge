@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { TelemetryAsset } from '../telemetry.models';
+import { Asset } from '../../../shared/models/asset.models';
 
 @Component({
   selector: 'app-telemetry-asset-selector',
@@ -11,7 +11,7 @@ import { TelemetryAsset } from '../telemetry.models';
   styleUrl: './telemetry-asset-selector.component.scss'
 })
 export class TelemetryAssetSelectorComponent {
-  readonly assets = input.required<TelemetryAsset[]>();
+  readonly assets = input.required<Asset[]>();
   readonly selectedAssetIds = input.required<string[]>();
   readonly maxSelection = input<number>(3);
 

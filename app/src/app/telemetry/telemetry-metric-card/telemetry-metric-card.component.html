@@ -1,4 +1,4 @@
-<p-card [styleClass]="'metric-card' + (severity() === 'warning' ? ' metric-card--warning' : '')">
+<p-card class="metric-card">
   <div class="asset-row">
     <p class="asset-line">{{ assetType() | titlecase }} · {{ assetName() }}</p>
     <p-tag [severity]="statusSeverity()" [value]="status() | titlecase" />
@@ -7,23 +7,7 @@
   <p class="metric-line">{{ metricLabel() }}</p>
 
   <p class="value-line">
-    {{ value() | number: '1.1-1' }}
+    {{ value() | number: '1.1-2' }}
     <span>{{ unit() }}</span>
   </p>
-
-  <p class="delta-line" [class.delta-line--down]="delta() < 0" [class.delta-line--flat]="delta() === 0">
-    {{ trendPrefix() }}{{ delta() | number: '1.1-1' }} since last poll
-  </p>
-
-  <p-progressbar
-    [value]="meterPercent()"
-    [showValue]="false"
-    [styleClass]="'metric-meter' + (severity() === 'warning' ? ' metric-meter--warning' : '')"
-  />
-
-  <p-tag
-    [value]="severity() === 'warning' ? 'Warning' : 'Nominal'"
-    [severity]="statusSeverity()"
-    styleClass="health-tag"
-  />
 </p-card>

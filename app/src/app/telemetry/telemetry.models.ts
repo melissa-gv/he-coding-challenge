@@ -22,39 +22,27 @@ export interface TelemetryMetricDefinition {
   key: TelemetryMetricKey;
   label: string;
   unit: string;
-  warningThreshold: number;
-  maxScale: number;
 }
-
-export type TelemetrySeverity = 'nominal' | 'warning';
 
 export const TELEMETRY_METRICS: TelemetryMetricDefinition[] = [
   {
     key: 'temperature',
     label: 'Temperature',
-    unit: 'C',
-    warningThreshold: 85,
-    maxScale: 120
+    unit: 'Celsius'
   },
   {
     key: 'pressure',
     label: 'Pressure',
-    unit: 'psi',
-    warningThreshold: 145,
-    maxScale: 220
+    unit: 'psi'
   },
   {
     key: 'vibration',
     label: 'Vibration',
-    unit: 'mm/s',
-    warningThreshold: 4.5,
-    maxScale: 8
+    unit: 'mm/s'
   },
   {
     key: 'power_consumption',
     label: 'Power Draw',
-    unit: 'kW',
-    warningThreshold: 90,
-    maxScale: 220
+    unit: 'kW'
   }
 ];

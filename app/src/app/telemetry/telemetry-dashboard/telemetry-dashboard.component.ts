@@ -5,12 +5,7 @@ import { MessageModule } from 'primeng/message';
 import { AppDataStoreService } from '../../shared/data-store/app-data-store.service';
 import { TelemetryAssetSelectorComponent } from '../telemetry-asset-selector/telemetry-asset-selector.component';
 import { TelemetryMetricCardComponent } from '../telemetry-metric-card/telemetry-metric-card.component';
-import {
-  TELEMETRY_METRICS,
-  TelemetryMetricDefinition,
-  TelemetryMetricKey,
-  TelemetrySeverity
-} from '../telemetry.models';
+import { TELEMETRY_METRICS, TelemetryMetricDefinition, TelemetryMetricKey } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-dashboard',
@@ -47,32 +42,6 @@ export class TelemetryDashboardComponent {
   protected metricValue(assetId: string, key: TelemetryMetricKey): number {
     const telemetry = this.dataStore.telemetryByAssetId()[assetId];
     return telemetry?.[key] ?? 0;
-  }
-
-  protected metricDelta(assetId: string, key: TelemetryMetricKey): number {
-    const previousTelemetry = this.dataStore.previousTelemetryByAssetId()[assetId];
-    const currentTelemetry = this.dataStore.telemetryByAssetId()[assetId];
-
-    if (!previousTelemetry || !currentTelemetry) {
-      return 0;
-    }
-
-    return Number((currentTelemetry[key] - previousTelemetry[key]).toFixed(2));
-  }
-
-  protected metricSeverity(assetId: string, metric: TelemetryMetricDefinition): TelemetrySeverity {
-    const value = this.metricValue(assetId, metric.key);
-
-    if (value >= metric.warningThreshold) {
-      return 'warning';
-    }
-
-    return 'nominal';
-  }
-
-  protected meterPercent(assetId: string, metric: TelemetryMetricDefinition): number {
-    const value = Math.max(0, this.metricValue(assetId, metric.key));
-    return Math.min((value / metric.maxScale) * 100, 100);
   }
 
   protected telemetryStatus(assetId: string): string {

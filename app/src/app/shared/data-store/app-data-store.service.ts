@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subscription, forkJoin, interval } from 'rxjs';
-import { Asset } from '../models/asset.models';
 import { TelemetrySnapshot } from '../../telemetry/telemetry.models';
+import { Asset } from '../models/asset.models';
 
 const ASSETS_API_URL = 'http://localhost:8000/api/assets';
 const TELEMETRY_API_URL = 'http://localhost:8000/api/telemetry';
@@ -40,9 +40,6 @@ export class AppDataStoreService {
 
   private readonly _telemetryByAssetId = signal<Record<string, TelemetrySnapshot>>({});
   readonly telemetryByAssetId = this._telemetryByAssetId.asReadonly();
-
-  private readonly _previousTelemetryByAssetId = signal<Record<string, TelemetrySnapshot>>({});
-  readonly previousTelemetryByAssetId = this._previousTelemetryByAssetId.asReadonly();
 
   readonly selectedAssets = computed(() => {
     const selectedIds = this._selectedAssetIds();
@@ -81,7 +78,9 @@ export class AppDataStoreService {
           this._isLoadingAssets.set(false);
 
           const validSelected = this.sanitizeSelection(this._selectedAssetIds(), assets);
-          const nextSelection = validSelected.length ? validSelected : assets.slice(0, MAX_SELECTION).map((asset) => asset.id);
+          const nextSelection = validSelected.length
+            ? validSelected
+            : assets.slice(0, MAX_SELECTION).map((asset) => asset.id);
 
           const hasSelectionChanged = !this.sameSelection(nextSelection, this._selectedAssetIds());
           this._selectedAssetIds.set(nextSelection);
@@ -112,7 +111,6 @@ export class AppDataStoreService {
     const selectedIds = this._selectedAssetIds();
 
     if (!selectedIds.length) {
-      this._previousTelemetryByAssetId.set(this._telemetryByAssetId());
       this._telemetryByAssetId.set({});
       this._telemetryError.set(null);
       this._isLoadingTelemetry.set(false);
@@ -135,7 +133,6 @@ export class AppDataStoreService {
             nextTelemetry[telemetry.asset_id] = telemetry;
           });
 
-          this._previousTelemetryByAssetId.set(this._telemetryByAssetId());
           this._telemetryByAssetId.set(nextTelemetry);
           this._lastLiveUpdate.set(new Date());
           this._isLoadingTelemetry.set(false);

@@ -23,7 +23,7 @@ describe('TelemetryDashboardComponent', () => {
     httpTestingController.verify();
   });
 
-  it('should render telemetry metrics using shared store state', () => {
+  it('should render telemetry metrics using latest shared store data', () => {
     const fixture = TestBed.createComponent(TelemetryDashboardComponent);
 
     dataStore.initialize();
@@ -101,6 +101,9 @@ describe('TelemetryDashboardComponent', () => {
     expect(compiled.textContent).toContain('Primary Cooling Pump');
     expect(compiled.textContent).toContain('Air Compressor Unit 1');
     expect(compiled.textContent).toContain('Backup Generator');
+    expect(compiled.textContent).toContain('71.4');
     expect(compiled.querySelectorAll('app-telemetry-metric-card').length).toBe(12);
+    expect(compiled.textContent).not.toContain('since last poll');
+    expect(compiled.querySelector('p-progressbar')).toBeNull();
   });
 });

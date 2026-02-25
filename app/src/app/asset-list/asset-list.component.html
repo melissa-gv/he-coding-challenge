@@ -5,7 +5,11 @@
       <h1>Asset List</h1>
       <p class="subtitle">All available assets from the backend API.</p>
     </div>
-    <button type="button" class="refresh-button" (click)="loadAssets()">Refresh</button>
+    <p-button
+      label="Refresh"
+      styleClass="refresh-button"
+      (onClick)="loadAssets()"
+    />
   </header>
 
   @if (isLoading()) {
@@ -13,7 +17,11 @@
   } @else if (errorMessage()) {
     <section class="message-box error-box">
       <p>{{ errorMessage() }}</p>
-      <button type="button" class="retry-button" (click)="loadAssets()">Try again</button>
+      <p-button
+        label="Try again"
+        styleClass="retry-button"
+        (onClick)="loadAssets()"
+      />
     </section>
   } @else {
     <section class="table-wrapper" aria-label="Asset list">

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 import { TelemetryAsset } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-asset-selector',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './telemetry-asset-selector.component.html',
   styleUrl: './telemetry-asset-selector.component.scss'
 })
@@ -36,5 +37,9 @@ export class TelemetryAssetSelectorComponent {
 
   protected isDisabled(assetId: string): boolean {
     return !this.isSelected(assetId) && this.selectedAssetIds().length >= this.maxSelection();
+  }
+
+  protected optionLabel(asset: TelemetryAsset): string {
+    return `${asset.name} (${asset.type})`;
   }
 }

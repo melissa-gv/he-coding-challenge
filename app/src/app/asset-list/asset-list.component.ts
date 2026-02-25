@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ButtonModule } from 'primeng/button';
 
 interface Asset {
   id: string;
@@ -14,7 +15,7 @@ interface Asset {
 
 @Component({
   selector: 'app-asset-list',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './asset-list.component.html',
   styleUrl: './asset-list.component.scss'
 })

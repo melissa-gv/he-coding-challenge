@@ -11,7 +11,11 @@
       @if (lastLiveUpdate()) {
         <p class="live-time">{{ lastLiveUpdate() | date: 'mediumTime' }}</p>
       }
-      <button type="button" class="refresh-button" (click)="refreshTelemetry()">Refresh</button>
+      <p-button
+        label="Refresh"
+        styleClass="refresh-button"
+        (onClick)="refreshTelemetry()"
+      />
     </div>
   </header>
 

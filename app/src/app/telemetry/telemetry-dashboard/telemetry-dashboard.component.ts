@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin, interval } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
 import { TelemetryAssetSelectorComponent } from '../telemetry-asset-selector/telemetry-asset-selector.component';
 import { TelemetryMetricCardComponent } from '../telemetry-metric-card/telemetry-metric-card.component';
 import {
@@ -16,7 +17,7 @@ import {
 
 @Component({
   selector: 'app-telemetry-dashboard',
-  imports: [CommonModule, TelemetryAssetSelectorComponent, TelemetryMetricCardComponent],
+  imports: [CommonModule, ButtonModule, TelemetryAssetSelectorComponent, TelemetryMetricCardComponent],
   templateUrl: './telemetry-dashboard.component.html',
   styleUrl: './telemetry-dashboard.component.scss'
 })

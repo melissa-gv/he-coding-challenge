@@ -3,18 +3,12 @@
 
   <div class="asset-option-grid">
     @for (asset of assets(); track asset.id) {
-      <button
-        type="button"
-        class="asset-option"
-        [class.selected]="isSelected(asset.id)"
-        [class.asset-option--disabled]="isDisabled(asset.id)"
+      <p-button
+        [label]="optionLabel(asset)"
+        [styleClass]="'asset-option' + (isSelected(asset.id) ? ' selected' : '') + (isDisabled(asset.id) ? ' asset-option--disabled' : '')"
         [disabled]="isDisabled(asset.id)"
-        (click)="toggleAsset(asset.id)"
-      >
-        <span class="toggle-indicator">{{ isSelected(asset.id) ? '✓' : '+' }}</span>
-        <span class="asset-name">{{ asset.name }}</span>
-        <span class="asset-meta">{{ asset.type | titlecase }} · {{ asset.location }}</span>
-      </button>
+        (onClick)="toggleAsset(asset.id)"
+      />
     }
   </div>
 </section>

@@ -6,6 +6,7 @@ import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Va
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
@@ -48,6 +49,7 @@ export class AssetConfigurationDialogComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly configurationApi = inject(ConfigurationApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly messageService = inject(MessageService);
 
   readonly visible = input<boolean>(false);
   readonly asset = input<Asset | null>(null);
@@ -57,7 +59,6 @@ export class AssetConfigurationDialogComponent {
   protected readonly isSaving = signal<boolean>(false);
   protected readonly loadError = signal<string | null>(null);
   protected readonly submitError = signal<string | null>(null);
-  protected readonly submitSuccess = signal<string | null>(null);
 
   protected readonly priorityOptions = PRIORITY_LEVELS.map((value) => ({ label: this.toLabel(value), value }));
   protected readonly maintenanceModeOptions = MAINTENANCE_MODES.map((value) => ({ label: this.toLabel(value), value }));
@@ -148,7 +149,6 @@ export class AssetConfigurationDialogComponent {
 
   protected submitConfiguration(): void {
     this.submitError.set(null);
-    this.submitSuccess.set(null);
     this.clearServerErrors();
 
     if (this.form.invalid) {
@@ -171,8 +171,13 @@ export class AssetConfigurationDialogComponent {
             ...configuration,
             notes: configuration.notes ?? ''
           });
-          this.submitSuccess.set('Configuration saved successfully.');
           this.isSaving.set(false);
+          this.onDialogVisibilityChange(false);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Configuration Saved',
+            detail: 'Configuration saved successfully.'
+          });
         },
         error: (error: unknown) => {
           this.applyServerErrors(error);
@@ -354,7 +359,6 @@ export class AssetConfigurationDialogComponent {
   private resetFeedback(): void {
     this.loadError.set(null);
     this.submitError.set(null);
-    this.submitSuccess.set(null);
   }
 
   private toLabel(value: string): string {

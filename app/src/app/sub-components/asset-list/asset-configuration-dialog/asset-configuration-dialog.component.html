@@ -16,10 +16,6 @@
       <p-message severity="error">{{ loadError() ?? '' }}</p-message>
     }
 
-    @if (submitSuccess()) {
-      <p-message severity="success">{{ submitSuccess() ?? '' }}</p-message>
-    }
-
     @if (submitError()) {
       <p-message severity="error">{{ submitError() ?? '' }}</p-message>
     }

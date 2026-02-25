@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { ToastModule } from 'primeng/toast';
 import { AssetListComponent } from './sub-components/asset-list/asset-list.component';
 import { PowerVisualizationComponent } from './sub-components/power/power-visualization.component';
 import { AssetStoreService } from './shared/store/asset-store.service';
@@ -7,7 +8,7 @@ import { TelemetryDashboardComponent } from './sub-components/telemetry/telemetr
 
 @Component({
   selector: 'app-root',
-  imports: [AssetListComponent, TelemetryDashboardComponent, PowerVisualizationComponent],
+  imports: [ToastModule, AssetListComponent, TelemetryDashboardComponent, PowerVisualizationComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

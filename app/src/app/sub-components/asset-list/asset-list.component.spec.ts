@@ -50,7 +50,11 @@ describe('AssetListComponent', () => {
     const content = compiled.textContent ?? '';
 
     expect(compiled.querySelector('.asset-table')).toBeTruthy();
-    expect(compiled.querySelectorAll('.asset-table th').length).toBe(5);
+    expect(compiled.querySelector('#asset-name-filter')).toBeTruthy();
+    expect(compiled.querySelector('#asset-location-filter')).toBeTruthy();
+    expect(compiled.querySelectorAll('.asset-filter-row p-select').length).toBe(2);
+    expect(compiled.querySelectorAll('.asset-table .asset-filter-row th').length).toBe(5);
+    expect(compiled.querySelectorAll('.asset-table th p-sorticon').length).toBe(4);
     expect(compiled.querySelector('.asset-config-button .pi-cog')).toBeTruthy();
     expect(content).toContain('Primary Cooling Pump');
     expect(content.toLowerCase()).toContain('pump');

@@ -28,14 +28,73 @@
       />
     </div>
   } @else {
-    <p-table [value]="assets()" class="asset-table">
+    <p-table #assetTable [value]="assets()" class="asset-table">
       <ng-template pTemplate="header">
         <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Location</th>
-          <th>Status</th>
+          <th pSortableColumn="name">
+            Name
+            <p-sortIcon field="name" />
+          </th>
+          <th pSortableColumn="type">
+            Type
+            <p-sortIcon field="type" />
+          </th>
+          <th pSortableColumn="location">
+            Location
+            <p-sortIcon field="location" />
+          </th>
+          <th pSortableColumn="status">
+            Status
+            <p-sortIcon field="status" />
+          </th>
           <th class="configure-col">Configure</th>
+        </tr>
+        <tr class="asset-filter-row">
+          <th>
+            <input
+              id="asset-name-filter"
+              type="text"
+              [value]="nameFilterValue()"
+              placeholder="Filter name"
+              (input)="onTextFilter($event, assetTable, 'name')"
+            />
+          </th>
+          <th>
+            <p-select
+              inputId="asset-type-filter"
+              [options]="typeFilterOptions()"
+              optionLabel="label"
+              optionValue="value"
+              [ngModel]="typeFilterValue()"
+              placeholder="All types"
+              [showClear]="true"
+              appendTo="body"
+              (ngModelChange)="onSelectFilter(assetTable, 'type', $event)"
+            />
+          </th>
+          <th>
+            <input
+              id="asset-location-filter"
+              type="text"
+              [value]="locationFilterValue()"
+              placeholder="Filter location"
+              (input)="onTextFilter($event, assetTable, 'location')"
+            />
+          </th>
+          <th>
+            <p-select
+              inputId="asset-status-filter"
+              [options]="statusFilterOptions()"
+              optionLabel="label"
+              optionValue="value"
+              [ngModel]="statusFilterValue()"
+              placeholder="All statuses"
+              [showClear]="true"
+              appendTo="body"
+              (ngModelChange)="onSelectFilter(assetTable, 'status', $event)"
+            />
+          </th>
+          <th></th>
         </tr>
       </ng-template>
 

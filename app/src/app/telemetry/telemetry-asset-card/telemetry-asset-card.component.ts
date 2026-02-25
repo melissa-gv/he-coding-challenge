@@ -2,21 +2,19 @@ import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
+import { TelemetryMetricRow } from '../telemetry.models';
 
 @Component({
-  selector: 'app-telemetry-metric-card',
+  selector: 'app-telemetry-asset-card',
   imports: [CommonModule, CardModule, TagModule],
-  templateUrl: './telemetry-metric-card.component.html',
-  styleUrl: './telemetry-metric-card.component.scss'
+  templateUrl: './telemetry-asset-card.component.html',
+  styleUrl: './telemetry-asset-card.component.scss'
 })
-export class TelemetryMetricCardComponent {
+export class TelemetryAssetCardComponent {
   readonly assetName = input.required<string>();
   readonly assetType = input.required<string>();
   readonly status = input.required<string>();
-
-  readonly metricLabel = input.required<string>();
-  readonly unit = input.required<string>();
-  readonly value = input.required<number>();
+  readonly metrics = input.required<TelemetryMetricRow[]>();
 
   protected statusSeverity(): 'success' | 'warn' | 'danger' | 'info' {
     const status = this.status().toLowerCase();

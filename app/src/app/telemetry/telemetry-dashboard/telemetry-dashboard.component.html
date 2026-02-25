@@ -14,6 +14,7 @@
       <p-button
         label="Refresh"
         icon="pi pi-refresh"
+        size="small"
         (onClick)="refreshTelemetry()"
       />
     </div>
@@ -40,23 +41,14 @@
         <p-message severity="info">Loading telemetry data...</p-message>
       }
 
-      <section class="telemetry-grid" [style.--selected-count]="selectedAssets().length">
-        @for (metric of metrics; track metric.key) {
-          <div class="metric-label-card">
-            <p>{{ metric.label }}</p>
-            <span>{{ metric.unit }}</span>
-          </div>
-
-          @for (asset of selectedAssets(); track asset.id) {
-            <app-telemetry-metric-card
-              [assetName]="asset.name"
-              [assetType]="asset.type"
-              [status]="telemetryStatus(asset.id)"
-              [metricLabel]="metric.label"
-              [unit]="metric.unit"
-              [value]="metricValue(asset.id, metric.key)"
-            />
-          }
+      <section class="telemetry-asset-grid">
+        @for (asset of selectedAssets(); track asset.id) {
+          <app-telemetry-asset-card
+            [assetName]="asset.name"
+            [assetType]="asset.type"
+            [status]="telemetryStatus(asset.id)"
+            [metrics]="assetMetricRows(asset.id)"
+          />
         }
       </section>
     }

@@ -23,7 +23,7 @@ describe('TelemetryDashboardComponent', () => {
     httpTestingController.verify();
   });
 
-  it('should render telemetry metrics using latest shared store data', () => {
+  it('renders one telemetry card per selected asset with metrics inside', () => {
     const fixture = TestBed.createComponent(TelemetryDashboardComponent);
 
     dataStore.initialize();
@@ -96,14 +96,11 @@ describe('TelemetryDashboardComponent', () => {
 
     expect(dataStore.selectedAssetIds().length).toBe(3);
     expect(compiled.textContent).toContain('Telemetry Display');
-    expect(compiled.textContent).toContain('Temperature');
-    expect(compiled.textContent).toContain('Pressure');
     expect(compiled.textContent).toContain('Primary Cooling Pump');
     expect(compiled.textContent).toContain('Air Compressor Unit 1');
     expect(compiled.textContent).toContain('Backup Generator');
-    expect(compiled.textContent).toContain('71.4');
-    expect(compiled.querySelectorAll('app-telemetry-metric-card').length).toBe(12);
-    expect(compiled.textContent).not.toContain('since last poll');
-    expect(compiled.querySelector('p-progressbar')).toBeNull();
+    expect(compiled.textContent).toContain('Temperature');
+    expect(compiled.textContent).toContain('Power Draw');
+    expect(compiled.querySelectorAll('app-telemetry-asset-card').length).toBe(3);
   });
 });

@@ -1,43 +1,43 @@
 import { TestBed } from '@angular/core/testing';
-import { TelemetryMetricCardComponent } from './telemetry-metric-card.component';
+import { TelemetryAssetCardComponent } from './telemetry-asset-card.component';
 
-describe('TelemetryMetricCardComponent', () => {
+describe('TelemetryAssetCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TelemetryMetricCardComponent]
+      imports: [TelemetryAssetCardComponent]
     }).compileComponents();
   });
 
-  it('renders latest value, unit, and status', () => {
-    const fixture = TestBed.createComponent(TelemetryMetricCardComponent);
+  it('renders asset name, type, status, and metric rows', () => {
+    const fixture = TestBed.createComponent(TelemetryAssetCardComponent);
 
     fixture.componentRef.setInput('assetName', 'Primary Cooling Pump');
     fixture.componentRef.setInput('assetType', 'pump');
     fixture.componentRef.setInput('status', 'operational');
-    fixture.componentRef.setInput('metricLabel', 'Temperature');
-    fixture.componentRef.setInput('unit', 'C');
-    fixture.componentRef.setInput('value', 71.4);
+    fixture.componentRef.setInput('metrics', [
+      { key: 'temperature', label: 'Temperature', unit: 'Celsius', value: 71.4 },
+      { key: 'pressure', label: 'Pressure', unit: 'psi', value: 118.2 }
+    ]);
 
     fixture.detectChanges();
 
-    const compiled = fixture.nativeElement as HTMLElement;
-    const content = compiled.textContent ?? '';
+    const content = (fixture.nativeElement as HTMLElement).textContent ?? '';
 
     expect(content).toContain('Primary Cooling Pump');
+    expect(content.toLowerCase()).toContain('pump');
+    expect(content).toContain('Operational');
     expect(content).toContain('Temperature');
     expect(content).toContain('71.4');
-    expect(content).toContain('C');
-    expect(content).toContain('Operational');
+    expect(content).toContain('Pressure');
+    expect(content).toContain('118.2');
   });
 
   it('maps status values to expected p-tag severity classes', () => {
-    const fixture = TestBed.createComponent(TelemetryMetricCardComponent);
+    const fixture = TestBed.createComponent(TelemetryAssetCardComponent);
 
     fixture.componentRef.setInput('assetName', 'Primary Cooling Pump');
     fixture.componentRef.setInput('assetType', 'pump');
-    fixture.componentRef.setInput('metricLabel', 'Pressure');
-    fixture.componentRef.setInput('unit', 'psi');
-    fixture.componentRef.setInput('value', 118.2);
+    fixture.componentRef.setInput('metrics', []);
 
     fixture.componentRef.setInput('status', 'operational');
     fixture.detectChanges();

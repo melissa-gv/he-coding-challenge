@@ -1,0 +1,66 @@
+.asset-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.asset-name {
+  margin: 0;
+  color: #e9f3ff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.asset-type {
+  margin: 0.35rem 0 0;
+  color: #8aa4c0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.metric-list {
+  margin-top: 0.8rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.metric-label {
+  margin: 0;
+  color: #9db5cf;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.metric-value {
+  margin: 0;
+  color: #eef6ff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.metric-value span {
+  color: #87a1be;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+
+:host ::ng-deep .asset-header-card {
+  border: 1px solid #2a3e5d;
+  border-radius: 10px;
+  background: linear-gradient(160deg, rgba(13, 20, 34, 0.96), rgba(8, 13, 23, 0.98));
+}
+
+:host ::ng-deep .asset-header-card .p-card-body {
+  padding: 0.9rem;
+}

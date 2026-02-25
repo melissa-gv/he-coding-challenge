@@ -18,17 +18,21 @@ export type TelemetryMetricKey =
   | 'vibration'
   | 'power_consumption';
 
-export interface TelemetryMetricDefinition {
+
+
+export type TelemetryMetricRow = TelemetryMetric & { value: number };
+
+export interface TelemetryMetric {
   key: TelemetryMetricKey;
   label: string;
   unit: string;
 }
 
-export const TELEMETRY_METRICS: TelemetryMetricDefinition[] = [
+export const TELEMETRY_METRICS: TelemetryMetric[] = [
   {
     key: 'temperature',
     label: 'Temperature',
-    unit: 'Celsius'
+    unit: 'C°'
   },
   {
     key: 'pressure',

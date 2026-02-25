@@ -18,18 +18,7 @@ Open your browser at `http://localhost:4200/`.
 **Frontend Framework:** I used Angular due to my familiarity with the framework and how full-featured it is.
 
 **UI Library:**  I initially started with pure CSS so I could customize to my liking; however, I quickly realized that
-due to the complexity, achieving the clean visuals I was hoping for would require an leveraging an existing and
-robust design system.
-After researching design systems that work well with Angular, I landed on PrimeNG. It's simple to use and produces a
-clean and elegant UI.
-
-**Visuals:** Charts.js was used to graph the power consumption values. It was selected due to features and customizations.
-
-## Framework Choices
-**Frontend Framework:** I used Angular due to my familiarity with the framework and how full-featured it is.
-
-**UI Library:**  I initially started with pure CSS so I could customize to my liking; however, I quickly realized that
-due to the complexity, achieving the clean visuals I was hoping for would require an leveraging an existing and
+due to the complexity, achieving the clean visuals I was hoping for would require leveraging an existing and
 robust design system.
 After researching design systems that work well with Angular, I landed on PrimeNG. It's simple to use and produces a
 clean and elegant UI.
@@ -62,4 +51,8 @@ you can see the asset metrics at a glance.
 ### Conclusion
 Overall, this was fun and I thoroughly enjoyed the opportunity to build something from scratch,
 using interesting data, and create a cool UI.
+
+Despite the time constraints, I hope my attention to detail comes through. Juggling functionality, aesthetics, 
+and speed is no easy balancing act, but it's the kind of problem I genuinely enjoy solving.
+
 

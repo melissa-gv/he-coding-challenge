@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { TelemetryAsset } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-asset-selector',
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, FormsModule, MultiSelectModule],
   templateUrl: './telemetry-asset-selector.component.html',
   styleUrl: './telemetry-asset-selector.component.scss'
 })
@@ -16,30 +17,7 @@ export class TelemetryAssetSelectorComponent {
 
   readonly selectedAssetIdsChange = output<string[]>();
 
-  protected toggleAsset(assetId: string): void {
-    const currentSelection = this.selectedAssetIds();
-
-    if (currentSelection.includes(assetId)) {
-      this.selectedAssetIdsChange.emit(currentSelection.filter((id) => id !== assetId));
-      return;
-    }
-
-    if (currentSelection.length >= this.maxSelection()) {
-      return;
-    }
-
-    this.selectedAssetIdsChange.emit([...currentSelection, assetId]);
-  }
-
-  protected isSelected(assetId: string): boolean {
-    return this.selectedAssetIds().includes(assetId);
-  }
-
-  protected isDisabled(assetId: string): boolean {
-    return !this.isSelected(assetId) && this.selectedAssetIds().length >= this.maxSelection();
-  }
-
-  protected optionLabel(asset: TelemetryAsset): string {
-    return `${asset.name} (${asset.type})`;
+  protected onSelectionChange(nextSelection: string[] | null): void {
+    this.selectedAssetIdsChange.emit(nextSelection ?? []);
   }
 }

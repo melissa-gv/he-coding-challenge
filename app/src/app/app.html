@@ -1,10 +1,11 @@
-<div class="app-shell">
-  <header class="workspace-nav" aria-label="Primary navigation">
-    <a routerLink="/assets" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-      >Assets</a
-    >
-    <a routerLink="/telemetry" routerLinkActive="active">Telemetry</a>
+<main class="app-shell">
+  <header class="shared-panel">
+    <p class="shared-kicker">Habitat Energy</p>
+    <h1 class="app-title">Asset Operations Dashboard</h1>
+    <p class="shared-subtitle">Asset inventory and live telemetry in a single PrimeNG workspace.</p>
   </header>
 
-  <router-outlet />
-</div>
+  <app-asset-list />
+
+  <app-telemetry-dashboard />
+</main>

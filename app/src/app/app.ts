@@ -1,10 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { AssetListComponent } from './asset-list/asset-list.component';
+import { AppDataStoreService } from './shared/data-store/app-data-store.service';
+import { TelemetryDashboardComponent } from './telemetry/telemetry-dashboard/telemetry-dashboard.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [AssetListComponent, TelemetryDashboardComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {}
+export class App {
+  private readonly dataStore = inject(AppDataStoreService);
+
+  constructor() {
+    this.dataStore.initialize();
+  }
+}

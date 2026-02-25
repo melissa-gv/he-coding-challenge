@@ -1,11 +1,6 @@
-export interface TelemetryAsset {
-  id: string;
-  name: string;
-  type: string;
-  location: string;
-  status: string;
-  last_updated: string;
-}
+import { Asset } from '../shared/models/asset.models';
+
+export type TelemetryAsset = Asset;
 
 export interface TelemetrySnapshot {
   asset_id: string;

@@ -1,52 +1,52 @@
-<main class="dashboard">
-  <header class="dashboard-header">
+<section class="shared-panel">
+  <header class="section-header shared-section-header">
     <div>
-      <p class="eyebrow">Asset Management</p>
-      <h1>Asset List</h1>
-      <p class="subtitle">All available assets from the backend API.</p>
+      <p class="shared-kicker">Asset Management</p>
+      <h2>Asset List</h2>
+      <p class="shared-subtitle">All available assets from the backend API.</p>
     </div>
+
     <p-button
+      icon="pi pi-refresh"
       label="Refresh"
-      styleClass="refresh-button"
       (onClick)="loadAssets()"
     />
   </header>
 
-  @if (isLoading()) {
-    <section class="message-box">Loading assets...</section>
+  @if (!isLoading()) {
+    <p-message severity="info">Loading assets...</p-message>
   } @else if (errorMessage()) {
-    <section class="message-box error-box">
-      <p>{{ errorMessage() }}</p>
+    <div class="error-shell">
+      <p-message severity="error" [text]="errorMessage() ?? ''" styleClass="asset-message" />
       <p-button
         label="Try again"
+        severity="danger"
+        variant="outlined"
         styleClass="retry-button"
         (onClick)="loadAssets()"
       />
-    </section>
+    </div>
   } @else {
-    <section class="table-wrapper" aria-label="Asset list">
-      <table class="asset-table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Location</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (asset of assets(); track asset.id) {
-            <tr>
-              <td>{{ asset.name }}</td>
-              <td>{{ asset.type | titlecase }}</td>
-              <td>{{ asset.location }}</td>
-              <td>
-                <span class="status-pill" [ngClass]="'status-' + asset.status">{{ asset.status }}</span>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
+    <p-table [value]="assets()" styleClass="asset-table" [tableStyle]="{ 'min-width': '52rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Location</th>
+          <th>Status</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-asset>
+        <tr>
+          <td>{{ asset.name }}</td>
+          <td>{{ asset.type | titlecase }}</td>
+          <td>{{ asset.location }}</td>
+          <td>
+            <p-tag [value]="asset.status | titlecase" [severity]="statusSeverity(asset.status)" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   }
-</main>
+</section>

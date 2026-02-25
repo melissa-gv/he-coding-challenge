@@ -1,115 +1,57 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { forkJoin, interval } from 'rxjs';
+import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { AppDataStoreService } from '../../shared/data-store/app-data-store.service';
 import { TelemetryAssetSelectorComponent } from '../telemetry-asset-selector/telemetry-asset-selector.component';
 import { TelemetryMetricCardComponent } from '../telemetry-metric-card/telemetry-metric-card.component';
 import {
   TELEMETRY_METRICS,
-  TelemetryAsset,
   TelemetryMetricDefinition,
   TelemetryMetricKey,
-  TelemetrySeverity,
-  TelemetrySnapshot
+  TelemetrySeverity
 } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-dashboard',
-  imports: [CommonModule, ButtonModule, TelemetryAssetSelectorComponent, TelemetryMetricCardComponent],
+  imports: [CommonModule, ButtonModule, MessageModule, TelemetryAssetSelectorComponent, TelemetryMetricCardComponent],
   templateUrl: './telemetry-dashboard.component.html',
   styleUrl: './telemetry-dashboard.component.scss'
 })
 export class TelemetryDashboardComponent {
-  private readonly http = inject(HttpClient);
-  private readonly destroyRef = inject(DestroyRef);
-
-  private readonly assetsApiUrl = 'http://localhost:8000/api/assets';
-  private readonly telemetryApiUrl = 'http://localhost:8000/api/telemetry';
+  private readonly dataStore = inject(AppDataStoreService);
 
   protected readonly metrics: TelemetryMetricDefinition[] = TELEMETRY_METRICS;
 
-  protected readonly assets = signal<TelemetryAsset[]>([]);
-  protected readonly selectedAssetIds = signal<string[]>([]);
+  protected readonly assets = this.dataStore.assets;
+  protected readonly selectedAssetIds = this.dataStore.selectedAssetIds;
+  protected readonly selectedAssets = this.dataStore.selectedAssets;
 
-  protected readonly isLoadingAssets = signal<boolean>(true);
-  protected readonly isLoadingTelemetry = signal<boolean>(false);
-  protected readonly errorMessage = signal<string | null>(null);
+  protected readonly isLoadingAssets = this.dataStore.isLoadingAssets;
+  protected readonly isLoadingTelemetry = this.dataStore.isLoadingTelemetry;
 
-  protected readonly lastLiveUpdate = signal<Date | null>(null);
+  protected readonly assetsError = this.dataStore.assetsError;
+  protected readonly telemetryError = this.dataStore.telemetryError;
+  protected readonly lastLiveUpdate = this.dataStore.lastLiveUpdate;
 
-  private readonly telemetryByAssetId = signal<Record<string, TelemetrySnapshot>>({});
-  private readonly previousTelemetryByAssetId = signal<Record<string, TelemetrySnapshot>>({});
-
-  protected readonly selectedAssets = computed(() => {
-    const selectedIds = this.selectedAssetIds();
-    const assets = this.assets();
-
-    return selectedIds
-      .map((selectedId) => assets.find((asset) => asset.id === selectedId))
-      .filter((asset): asset is TelemetryAsset => !!asset);
-  });
-
-  protected readonly hasTelemetryData = computed(() => Object.keys(this.telemetryByAssetId()).length > 0);
-
-  constructor() {
-    this.loadAssets();
-
-    interval(5000)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.refreshTelemetry());
-  }
+  protected readonly hasTelemetryData = this.dataStore.hasTelemetryData;
 
   protected onSelectedAssetIdsChange(selectedIds: string[]): void {
-    this.selectedAssetIds.set(selectedIds);
-    this.refreshTelemetry();
+    this.dataStore.setSelectedAssetIds(selectedIds);
   }
 
   protected refreshTelemetry(): void {
-    const selectedIds = this.selectedAssetIds();
-
-    if (!selectedIds.length) {
-      this.telemetryByAssetId.set({});
-      this.lastLiveUpdate.set(new Date());
-      return;
-    }
-
-    this.isLoadingTelemetry.set(true);
-    this.errorMessage.set(null);
-
-    const requests = selectedIds.map((assetId) => this.http.get<TelemetrySnapshot>(`${this.telemetryApiUrl}/${assetId}`));
-
-    forkJoin(requests)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (telemetryRows) => {
-          const nextTelemetry: Record<string, TelemetrySnapshot> = {};
-
-          telemetryRows.forEach((telemetry) => {
-            nextTelemetry[telemetry.asset_id] = telemetry;
-          });
-
-          this.previousTelemetryByAssetId.set(this.telemetryByAssetId());
-          this.telemetryByAssetId.set(nextTelemetry);
-          this.lastLiveUpdate.set(new Date());
-          this.isLoadingTelemetry.set(false);
-        },
-        error: () => {
-          this.errorMessage.set('Unable to load telemetry. Make sure the API is running on port 8000.');
-          this.isLoadingTelemetry.set(false);
-        }
-      });
+    this.dataStore.refreshTelemetry();
   }
 
   protected metricValue(assetId: string, key: TelemetryMetricKey): number {
-    const telemetry = this.telemetryByAssetId()[assetId];
+    const telemetry = this.dataStore.telemetryByAssetId()[assetId];
     return telemetry?.[key] ?? 0;
   }
 
   protected metricDelta(assetId: string, key: TelemetryMetricKey): number {
-    const previousTelemetry = this.previousTelemetryByAssetId()[assetId];
-    const currentTelemetry = this.telemetryByAssetId()[assetId];
+    const previousTelemetry = this.dataStore.previousTelemetryByAssetId()[assetId];
+    const currentTelemetry = this.dataStore.telemetryByAssetId()[assetId];
 
     if (!previousTelemetry || !currentTelemetry) {
       return 0;
@@ -134,30 +76,6 @@ export class TelemetryDashboardComponent {
   }
 
   protected telemetryStatus(assetId: string): string {
-    return this.telemetryByAssetId()[assetId]?.status ?? 'unknown';
-  }
-
-  private loadAssets(): void {
-    this.isLoadingAssets.set(true);
-    this.errorMessage.set(null);
-
-    this.http
-      .get<TelemetryAsset[]>(this.assetsApiUrl)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (assets) => {
-          this.assets.set(assets);
-
-          const defaultSelection = assets.slice(0, 2).map((asset) => asset.id);
-          this.selectedAssetIds.set(defaultSelection);
-
-          this.isLoadingAssets.set(false);
-          this.refreshTelemetry();
-        },
-        error: () => {
-          this.errorMessage.set('Unable to load assets for telemetry. Make sure the API is running on port 8000.');
-          this.isLoadingAssets.set(false);
-        }
-      });
+    return this.dataStore.telemetryByAssetId()[assetId]?.status ?? 'unknown';
   }
 }

@@ -1,69 +1,37 @@
-:host {
-  display: block;
-}
-
 .selector-shell {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .selector-label {
-  margin: 0 0 0.7rem;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  margin: 0 0 0.6rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
-  color: #82a4bf;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
 }
 
-.asset-option-grid {
+:host ::ng-deep .asset-multiselect {
+  width: 100%;
+}
+
+:host ::ng-deep .asset-multiselect .p-multiselect-label {
+  color: var(--text-main);
+}
+
+:host ::ng-deep .asset-multiselect .p-multiselect-chip-item {
+  background: rgba(52, 230, 178, 0.15);
+  border: 1px solid rgba(52, 230, 178, 0.25);
+}
+
+.asset-option-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.75rem;
 }
 
-.asset-option {
-  border: 1px solid #27364f;
-  background: linear-gradient(165deg, rgba(19, 30, 47, 0.9), rgba(11, 17, 29, 0.96));
-  border-radius: 10px;
-  color: #c7d9ee;
-  display: grid;
-  gap: 0.3rem;
-  padding: 0.85rem;
-  text-align: left;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+.asset-option-name {
+  color: #dce9fb;
 }
 
-.asset-option:hover {
-  border-color: #28d6a2;
-  transform: translateY(-1px);
-}
-
-.asset-option.selected {
-  border-color: #28d6a2;
-  box-shadow: 0 0 0 1px rgba(40, 214, 162, 0.35), 0 12px 16px rgba(0, 0, 0, 0.25);
-}
-
-.asset-option--disabled {
-  opacity: 0.45;
-}
-
-.toggle-indicator {
-  width: 1.1rem;
-  height: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  background: rgba(40, 214, 162, 0.18);
-  color: #5ff1c3;
-  font-size: 0.82rem;
-}
-
-.asset-name {
-  font-size: 1rem;
-  color: #e8f2ff;
-}
-
-.asset-meta {
-  font-size: 0.84rem;
-  color: #87a0bb;
+.asset-option-meta {
+  color: #89a2c0;
+  font-size: 0.8rem;
 }

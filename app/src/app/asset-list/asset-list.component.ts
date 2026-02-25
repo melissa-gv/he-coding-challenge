@@ -1,53 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-
-interface Asset {
-  id: string;
-  name: string;
-  type: string;
-  location: string;
-  status: string;
-  last_updated: string;
-}
+import { MessageModule } from 'primeng/message';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
 
 @Component({
   selector: 'app-asset-list',
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, MessageModule, TableModule, TagModule],
   templateUrl: './asset-list.component.html',
   styleUrl: './asset-list.component.scss'
 })
 export class AssetListComponent {
-  private readonly http = inject(HttpClient);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly assetsApiUrl = 'http://localhost:8000/api/assets';
+  private readonly dataStore = inject(AppDataStoreService);
 
-  protected readonly assets = signal<Asset[]>([]);
-  protected readonly isLoading = signal<boolean>(true);
-  protected readonly errorMessage = signal<string | null>(null);
-
-  constructor() {
-    this.loadAssets();
-  }
+  protected readonly assets = this.dataStore.assets;
+  protected readonly isLoading = this.dataStore.isLoadingAssets;
+  protected readonly errorMessage = this.dataStore.assetsError;
 
   protected loadAssets(): void {
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
+    this.dataStore.loadAssets();
+  }
 
-    this.http
-      .get<Asset[]>(this.assetsApiUrl)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (assets) => {
-          this.assets.set(assets);
-          this.isLoading.set(false);
-        },
-        error: () => {
-          this.errorMessage.set('Unable to load assets. Make sure the API is running on port 8000.');
-          this.isLoading.set(false);
-        }
-      });
+  protected statusSeverity(status: string): 'success' | 'warn' | 'danger' | 'info' {
+    if (status === 'operational') {
+      return 'success';
+    }
+
+    if (status === 'standby') {
+      return 'warn';
+    }
+
+    if (status === 'maintenance') {
+      return 'danger';
+    }
+
+    return 'info';
   }
 }

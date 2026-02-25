@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
+import { CardModule } from 'primeng/card';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TagModule } from 'primeng/tag';
 import { TelemetrySeverity } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-metric-card',
-  imports: [CommonModule],
+  imports: [CommonModule, CardModule, ProgressBarModule, TagModule],
   templateUrl: './telemetry-metric-card.component.html',
   styleUrl: './telemetry-metric-card.component.scss'
 })
@@ -26,5 +29,9 @@ export class TelemetryMetricCardComponent {
     }
 
     return '';
+  }
+
+  protected statusSeverity(): 'success' | 'warn' {
+    return this.severity() === 'warning' ? 'warn' : 'success';
   }
 }

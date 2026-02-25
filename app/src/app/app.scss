@@ -1,36 +1,13 @@
-:host {
-  display: block;
+.app-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2.4rem 1.2rem 3rem;
+  display: grid;
+  gap: 1.15rem;
 }
 
-.workspace-nav {
-  position: fixed;
-  top: 0.9rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-
-  display: inline-flex;
-  gap: 0.35rem;
-  padding: 0.35rem;
-
-  border: 1px solid rgba(27, 44, 66, 0.4);
-  border-radius: 999px;
-  background: rgba(9, 18, 32, 0.78);
-  backdrop-filter: blur(8px);
-}
-
-.workspace-nav a {
-  color: #9ab5d2;
-  text-decoration: none;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 0.42rem 0.85rem;
-  border-radius: 999px;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.workspace-nav a.active {
-  background: rgba(95, 241, 195, 0.2);
-  color: #6cf2cb;
+.app-title {
+  margin: 0.45rem 0 0;
+  font-size: clamp(1.75rem, 2.5vw, 2.45rem);
+  line-height: 1.1;
 }

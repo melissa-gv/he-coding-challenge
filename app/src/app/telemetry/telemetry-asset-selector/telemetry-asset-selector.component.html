@@ -1,14 +1,27 @@
 <section class="selector-shell">
   <p class="selector-label">Select assets (max {{ maxSelection() }})</p>
 
-  <div class="asset-option-grid">
-    @for (asset of assets(); track asset.id) {
-      <p-button
-        [label]="optionLabel(asset)"
-        [styleClass]="'asset-option' + (isSelected(asset.id) ? ' selected' : '') + (isDisabled(asset.id) ? ' asset-option--disabled' : '')"
-        [disabled]="isDisabled(asset.id)"
-        (onClick)="toggleAsset(asset.id)"
-      />
-    }
-  </div>
+  <p-multiselect
+    [options]="assets()"
+    [ngModel]="selectedAssetIds()"
+    (ngModelChange)="onSelectionChange($event)"
+    [selectionLimit]="maxSelection()"
+    [showToggleAll]="false"
+    [showClear]="true"
+    [filter]="true"
+    [display]="'chip'"
+    [optionLabel]="'name'"
+    [optionValue]="'id'"
+    [maxSelectedLabels]="maxSelection()"
+    [placeholder]="'Choose up to ' + maxSelection() + ' assets'"
+    appendTo="body"
+    styleClass="asset-multiselect"
+  >
+    <ng-template pTemplate="item" let-asset>
+      <div class="asset-option-row">
+        <span class="asset-option-name">{{ asset.name }}</span>
+        <span class="asset-option-meta">{{ asset.type | titlecase }} · {{ asset.location }}</span>
+      </div>
+    </ng-template>
+  </p-multiselect>
 </section>

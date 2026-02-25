@@ -1,9 +1,9 @@
-<main class="telemetry-shell">
-  <header class="telemetry-header">
+<section class="telemetry-shell shared-panel">
+  <header class="telemetry-header shared-section-header">
     <div>
-      <p class="kicker">Asset Monitoring / Telemetry Comparison</p>
-      <h1>Telemetry Display</h1>
-      <p class="subtitle">Select up to 3 assets and compare live operating metrics at a glance.</p>
+      <p class="shared-kicker">Asset Monitoring / Telemetry Comparison</p>
+      <h2>Telemetry Display</h2>
+      <p class="shared-subtitle">Select up to 3 assets and compare live operating metrics at a glance.</p>
     </div>
 
     <div class="live-panel">
@@ -13,6 +13,7 @@
       }
       <p-button
         label="Refresh"
+        icon="pi pi-refresh"
         styleClass="refresh-button"
         (onClick)="refreshTelemetry()"
       />
@@ -20,7 +21,7 @@
   </header>
 
   @if (isLoadingAssets()) {
-    <section class="message-box">Loading telemetry assets...</section>
+    <p-message severity="info" text="Loading telemetry assets..." styleClass="telemetry-message" />
   } @else {
     <app-telemetry-asset-selector
       [assets]="assets()"
@@ -29,13 +30,15 @@
       (selectedAssetIdsChange)="onSelectedAssetIdsChange($event)"
     />
 
-    @if (errorMessage()) {
-      <section class="message-box error-box">{{ errorMessage() }}</section>
+    @if (assetsError()) {
+      <p-message severity="error" [text]="assetsError() ?? ''" styleClass="telemetry-message" />
+    } @else if (telemetryError()) {
+      <p-message severity="error" [text]="telemetryError() ?? ''" styleClass="telemetry-message" />
     } @else if (!selectedAssetIds().length) {
-      <section class="message-box">Select at least one asset to view telemetry.</section>
+      <p-message severity="warn" text="Select at least one asset to view telemetry." styleClass="telemetry-message" />
     } @else {
       @if (isLoadingTelemetry() && !hasTelemetryData()) {
-        <section class="message-box">Loading telemetry data...</section>
+        <p-message severity="info" text="Loading telemetry data..." styleClass="telemetry-message" />
       }
 
       <section class="telemetry-grid" [style.--selected-count]="selectedAssets().length">
@@ -62,4 +65,4 @@
       </section>
     }
   }
-</main>
+</section>

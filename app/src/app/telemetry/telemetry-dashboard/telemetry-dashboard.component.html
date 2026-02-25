@@ -1,4 +1,4 @@
-<section class="telemetry-shell shared-panel">
+<section class="shared-panel">
   <header class="telemetry-header shared-section-header">
     <div>
       <p class="shared-kicker">Asset Monitoring / Telemetry Comparison</p>
@@ -14,14 +14,13 @@
       <p-button
         label="Refresh"
         icon="pi pi-refresh"
-        styleClass="refresh-button"
         (onClick)="refreshTelemetry()"
       />
     </div>
   </header>
 
   @if (isLoadingAssets()) {
-    <p-message severity="info" text="Loading telemetry assets..." styleClass="telemetry-message" />
+    <p-message severity="info">Loading telemetry assets...</p-message>
   } @else {
     <app-telemetry-asset-selector
       [assets]="assets()"
@@ -31,22 +30,22 @@
     />
 
     @if (assetsError()) {
-      <p-message severity="error" [text]="assetsError() ?? ''" styleClass="telemetry-message" />
+      <p-message severity="error" >{{ assetsError() ?? '' }}</p-message>
     } @else if (telemetryError()) {
-      <p-message severity="error" [text]="telemetryError() ?? ''" styleClass="telemetry-message" />
+      <p-message severity="error" >{{ telemetryError() ?? '' }}</p-message>
     } @else if (!selectedAssetIds().length) {
-      <p-message severity="warn" text="Select at least one asset to view telemetry." styleClass="telemetry-message" />
+      <p-message severity="warn">Select at least one asset to view telemetry.</p-message>
     } @else {
       @if (isLoadingTelemetry() && !hasTelemetryData()) {
-        <p-message severity="info" text="Loading telemetry data..." styleClass="telemetry-message" />
+        <p-message severity="info" >Loading telemetry data...</p-message>
       }
 
       <section class="telemetry-grid" [style.--selected-count]="selectedAssets().length">
         @for (metric of metrics; track metric.key) {
-          <article class="metric-label-card">
+          <div class="metric-label-card">
             <p>{{ metric.label }}</p>
             <span>{{ metric.unit }}</span>
-          </article>
+          </div>
 
           @for (asset of selectedAssets(); track asset.id) {
             <app-telemetry-metric-card

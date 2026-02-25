@@ -13,11 +13,11 @@
     />
   </header>
 
-  @if (!isLoading()) {
+  @if (isLoading()) {
     <p-message severity="info">Loading assets...</p-message>
   } @else if (errorMessage()) {
     <div class="error-shell">
-      <p-message severity="error" [text]="errorMessage() ?? ''" styleClass="asset-message" />
+      <p-message severity="error">{{ errorMessage() ?? '' }}</p-message>
       <p-button
         label="Try again"
         severity="danger"
@@ -27,7 +27,7 @@
       />
     </div>
   } @else {
-    <p-table [value]="assets()" styleClass="asset-table" [tableStyle]="{ 'min-width': '52rem' }">
+    <p-table [value]="assets()" class="asset-table">
       <ng-template pTemplate="header">
         <tr>
           <th>Name</th>

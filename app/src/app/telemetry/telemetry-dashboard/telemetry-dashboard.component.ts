@@ -5,12 +5,7 @@ import { MessageModule } from 'primeng/message';
 import { AppDataStoreService } from '../../shared/data-store/app-data-store.service';
 import { TelemetryAssetCardComponent } from '../telemetry-asset-card/telemetry-asset-card.component';
 import { TelemetryAssetSelectorComponent } from '../telemetry-asset-selector/telemetry-asset-selector.component';
-import {
-  TELEMETRY_METRICS,
-  TelemetryMetric,
-  TelemetryMetricKey,
-  TelemetryMetricRow
-} from '../telemetry.models';
+import { TELEMETRY_METRICS, TelemetryMetric, TelemetryMetricKey, TelemetryMetricRow } from '../telemetry.models';
 
 @Component({
   selector: 'app-telemetry-dashboard',

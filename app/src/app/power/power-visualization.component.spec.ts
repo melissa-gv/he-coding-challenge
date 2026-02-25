@@ -1,16 +1,16 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { App } from './app';
-import { AppDataStoreService } from './shared/data-store/app-data-store.service';
+import { AppDataStoreService } from '../shared/data-store/app-data-store.service';
+import { PowerVisualizationComponent } from './power-visualization.component';
 
-describe('App', () => {
+describe('PowerVisualizationComponent', () => {
   let httpTestingController: HttpTestingController;
   let dataStore: AppDataStoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [PowerVisualizationComponent],
       providers: [provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
 
@@ -23,20 +23,12 @@ describe('App', () => {
     httpTestingController.verify();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const request = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    request.flush([]);
+  it('renders a power section with asset select and chart', () => {
+    const fixture = TestBed.createComponent(PowerVisualizationComponent);
 
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+    dataStore.initialize();
 
-  it('should render both sections and use a shared assets request', () => {
-    const fixture = TestBed.createComponent(App);
-
-    const assetsRequest = httpTestingController.expectOne('http://localhost:8000/api/assets');
-    assetsRequest.flush([
+    httpTestingController.expectOne('http://localhost:8000/api/assets').flush([
       {
         id: 'AST-001',
         name: 'Primary Cooling Pump',
@@ -63,11 +55,7 @@ describe('App', () => {
       }
     ]);
 
-    const telemetryRequestOne = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001');
-    const telemetryRequestTwo = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002');
-    const telemetryRequestThree = httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003');
-
-    telemetryRequestOne.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-001').flush({
       asset_id: 'AST-001',
       timestamp: '2024-01-15T10:30:00Z',
       temperature: 71.4,
@@ -77,7 +65,7 @@ describe('App', () => {
       status: 'operational'
     });
 
-    telemetryRequestTwo.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-002').flush({
       asset_id: 'AST-002',
       timestamp: '2024-01-15T10:30:00Z',
       temperature: 93.2,
@@ -87,7 +75,7 @@ describe('App', () => {
       status: 'operational'
     });
 
-    telemetryRequestThree.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/telemetry/AST-003').flush({
       asset_id: 'AST-003',
       timestamp: '2024-01-15T10:30:00Z',
       temperature: 64.2,
@@ -99,8 +87,7 @@ describe('App', () => {
 
     fixture.detectChanges();
 
-    const powerRequest = httpTestingController.expectOne('http://localhost:8000/api/power/AST-001');
-    powerRequest.flush({
+    httpTestingController.expectOne('http://localhost:8000/api/power/AST-001').flush({
       asset_id: 'AST-001',
       asset_name: 'Primary Cooling Pump',
       asset_type: 'pump',
@@ -111,11 +98,9 @@ describe('App', () => {
 
     fixture.detectChanges();
 
-    httpTestingController.expectNone('http://localhost:8000/api/assets');
-
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Asset List');
-    expect(compiled.textContent).toContain('Telemetry Display');
     expect(compiled.textContent).toContain('Power Consumption Visualization');
+    expect(compiled.querySelector('p-select')).toBeTruthy();
+    expect(compiled.querySelector('p-chart canvas')).toBeTruthy();
   });
 });

@@ -39,7 +39,8 @@ app-root,
 app-asset-list,
 app-telemetry-dashboard,
 app-telemetry-asset-selector,
-app-telemetry-metric-card {
+app-telemetry-asset-card,
+app-power-visualization {
   display: block;
 }
 
@@ -69,4 +70,11 @@ app-telemetry-metric-card {
 .shared-subtitle {
   margin: 0.45rem 0 0;
   color: var(--text-soft);
+}
+
+.shared-section-header h2 {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  letter-spacing: 0.03em;
+  font-weight: 600;
 }

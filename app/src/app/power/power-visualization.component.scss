@@ -1,0 +1,41 @@
+.power-header {
+  margin-bottom: 0.75rem;
+}
+
+.asset-selector-controls {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 220px;
+  justify-items: end;
+
+}
+
+.asset-selector-controls .p-select {
+  width: 100%;
+}
+
+.power-sign-note {
+  margin: 0 0 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.asset-data {
+  margin: 0 0 0.45rem;
+  color: var(--text-soft);
+  font-size: 0.84rem;
+}
+
+.power-chart-shell {
+  height: 320px;
+}
+
+.power-chart-shell .p-chart {
+  height: 100%;
+}
+
+@media (max-width: 760px) {
+  .asset-selector-controls {
+    width: 100%;
+  }
+}

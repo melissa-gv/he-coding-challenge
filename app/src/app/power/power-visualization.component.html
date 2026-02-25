@@ -1,0 +1,55 @@
+<section class="shared-panel">
+  <header class="shared-section-header power-header">
+    <div>
+      <p class="shared-kicker">Power Analysis</p>
+      <h2>Power Consumption Visualization</h2>
+      <p class="shared-subtitle">Historical and forecast power and efficiency data (8h history + 16h forecast)</p>
+    </div>
+
+    <div class="asset-selector-controls">
+      <p-select
+        [options]="assets()"
+        optionLabel="name"
+        optionValue="id"
+        [ngModel]="selectedPowerAssetId()"
+        (ngModelChange)="onSelectedPowerAssetChange($event)"
+        placeholder="Select asset"
+      />
+      <p-button
+        label="Refresh"
+        icon="pi pi-refresh"
+        size="small"
+        (onClick)="refreshPowerData()"
+      />
+    </div>
+  </header>
+
+  @if (isLoadingAssets()) {
+    <p-message severity="info">Loading assets...</p-message>
+  } @else if (assetsError()) {
+    <p-message severity="error">{{ assetsError() ?? '' }}</p-message>
+  } @else if (!selectedPowerAssetId()) {
+    <p-message severity="warn">Select an asset to view power data.</p-message>
+  } @else {
+    <p class="power-sign-note">Positive = Consumption | Negative = Generation</p>
+
+
+    @if (isLoadingPower() && !hasPowerData()) {
+      <p-message severity="info">Loading power history and forecast...</p-message>
+    } @else if (powerError()) {
+      <p-message severity="error">{{ powerError() ?? '' }}</p-message>
+    } @else if (hasPowerData()) {
+      <p class="asset-data">
+        Asset: {{ selectedPowerAsset()?.name }}
+      </p>
+      <div class="power-chart-shell">
+        <p-chart
+          type="line"
+          [data]="powerChartData()"
+          [options]="powerChartOptions()"
+          ariaLabel="Power and efficiency chart"
+        />
+      </div>
+    }
+  }
+</section>

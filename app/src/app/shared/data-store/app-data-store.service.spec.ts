@@ -300,4 +300,22 @@ describe('AppDataStoreService', () => {
 
     expect(store.telemetryError()).toBeNull();
   });
+
+  it('loads power history and forecast for a given asset', () => {
+    store.refreshPowerData('AST-003');
+
+    const powerRequest = httpTestingController.expectOne('http://localhost:8000/api/power/AST-003');
+    powerRequest.flush({
+      asset_id: 'AST-003',
+      asset_name: 'Backup Generator',
+      asset_type: 'generator',
+      history: [{ timestamp: '2024-01-15T08:00:00Z', power_kw: -96.4, efficiency: 32.1 }],
+      forecast: [{ timestamp: '2024-01-15T16:00:00Z', power_kw: -101.2, efficiency: 30.4 }],
+      metadata: {}
+    });
+
+    expect(store.powerError()).toBeNull();
+    expect(store.powerByAssetId()['AST-003']?.history.length).toBe(1);
+    expect(store.powerByAssetId()['AST-003']?.forecast.length).toBe(1);
+  });
 });
